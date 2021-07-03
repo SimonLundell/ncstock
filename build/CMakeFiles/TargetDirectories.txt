@@ -1,0 +1,3 @@
+/home/simon/ncstock/build/CMakeFiles/rebuild_cache.dir
+/home/simon/ncstock/build/CMakeFiles/ncstock.dir
+/home/simon/ncstock/build/CMakeFiles/edit_cache.dir
