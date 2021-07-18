@@ -1,36 +1,35 @@
 #include <iostream>
+#include <string>
 #include <ncurses.h>
 #include <curses.h>
+
+#define LINES 25
+#define COLS 100
 
 int main() 
 {
     initscr();                 /* Start curses mode     */
+    refresh();  /* Part of init phase, mandatory */
+    int row; int col = 1;
 
-    WINDOW* win = newwin(30,10,0,0);
+    WINDOW* win = newwin(LINES,COLS,0,0); /* Create a window with lines, cols and start coords */
 
-    cbreak();
-    noecho();
-    int ch;
-    
-    //nodelay(stdscr, true);
-    getch();
-    while(true)
+    wmove(win, row, col); /* Moves cursor position? */
+    wborder(win, 0, 0, 0, 0, 0, 0, 0, 0); /* Create a border, if 0 it will take defaults */
+    wprintw(win, "Hello mate!"); /* Print something to the window */
+    wrefresh(win); /* Refresh the window, mandatory when changes occur */
+    cbreak(); /* Break on key? */
+    noecho(); /* Dont show key on terminal */
+    while (true)
     {
-        if ((ch = getch()) == ERR)
+        if ((getch()) != ERR)
         {
-            std::cout << "Something is wrong\n";
-        }
-        else
-        {
-            std::cout << "A key is pressed\n";
-            //wrefresh(win);
+            std::cout << "Jey!";
+            row += 1;
+            wmove(win, row, col);
+            refresh();
         }
     }
-    
-
-    wrefresh(win);
-
-    
 
     endwin();                  /* End curses mode    */
 

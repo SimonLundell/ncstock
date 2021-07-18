@@ -9,6 +9,8 @@
 /home/simon/ncstock/src/main.cpp
 iostream
 -
+string
+-
 ncurses.h
 -
 curses.h
