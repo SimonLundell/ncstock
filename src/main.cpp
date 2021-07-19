@@ -3,6 +3,18 @@
 #include <ncurses.h>
 #include <curses.h>
 
+std::string getString()
+{
+    std::string msg;
+    int n = getch();
+    while (n != '\n')
+    {
+        msg.push_back(n);
+        n = getch();
+    }
+    return msg;
+}
+
 int main() 
 {
     /*
@@ -11,7 +23,6 @@ int main()
     initscr();                 /* Start curses mode     */
     refresh();  /* Part of init phase, mandatory */
     int ch;
-
     int ROWS; 
     int COLS;
     getmaxyx(stdscr, ROWS, COLS); /* get size of stdscr (terminal) and return to ROWS, COLS */
@@ -30,15 +41,14 @@ int main()
 
     while (true)
     {
-        ch = getch();
         if (ch != ERR)
         {
             if ((wprintw(win,"%s","Now I'm here")) == ERR)
             {
                 std::cout << "Error";
             }
-            
         }
+        if (getString() == "quit") break;
         wrefresh(win);
     }
 
