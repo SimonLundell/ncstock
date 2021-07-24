@@ -9,6 +9,8 @@ int ROWS, COLS;
 int main() 
 {
     int ch, x, y;
+    setlocale(LC_CTYPE, "");
+    setlocale(LC_ALL, "");
     /*
         \* Inititialization of ncurses window
     */
@@ -29,6 +31,14 @@ int main()
     cbreak(); /* Disable line buffer (raw() works similar) */
     noecho(); /* Dont show key on terminal */
     keypad(stdscr, TRUE); /* Enable keypad input (F-keys, arrows etc.) */
+
+    for (int i = 1; i < ROWS-2; i++)
+    {
+        wmove(win,i,1);
+        waddch(win, ACS_DARROW);
+        waddch(win,ACS_UARROW);
+    }
+    wrefresh(win);
     
     while (true)
     {
