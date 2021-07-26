@@ -2,6 +2,7 @@
 
 #include <ncurses.h>
 #include <curses.h>
+#include "../include/WindowCreator.hpp"
 
 int ROWS, COLS;
 
@@ -37,11 +38,8 @@ int main()
     noecho(); /* Dont show key on terminal */
     keypad(stdscr, TRUE); /* Enable keypad input (F-keys, arrows etc.) */
 
-    /* Window inits */
-    WINDOW* win = newwin(ROWS-1,COLS,1,0); /* Create a window with lines, cols and start coords */
-    wmove(win, 1, 1); /* Moves cursor position? */
-    wborder(win, 0, 0, 0, 0, 0, 0, 0, 0); /* Create a border, if 0 it will take defaults */
-    wrefresh(win); /* Refresh the window, mandatory when changes occur */
+    /* Window creation */
+    WINDOW* win = create_window_wBorder(ROWS-1, COLS, 1, 1);
 
     for (int i = 1; i < ROWS-2; i++)
     {
@@ -52,7 +50,6 @@ int main()
         wattron(win, COLOR_PAIR(1));
         waddch(win, ACS_DARROW);
         wattroff(win, COLOR_PAIR(1));
-        
     }
 
     wrefresh(win);
