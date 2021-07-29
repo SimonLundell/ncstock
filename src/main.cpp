@@ -75,23 +75,19 @@ int main()
                     break;
                 case KEY_UP:
                     getyx(win,c_y,c_x);
-                    c_y -= 1;
-                    wmove(win, c_y, c_x);
+                    wmove(win, --c_y, c_x);
                     break;
                 case KEY_DOWN:
                     getyx(win,c_y,c_x);
-                    c_y += 1;
-                    wmove(win, c_y, c_x);
+                    wmove(win, ++c_y, c_x);
                     break;
                 case KEY_LEFT:
                     getyx(win,c_y,c_x);
-                    c_x -= 1;
-                    wmove(win, c_y, c_x);
+                    wmove(win, c_y, --c_x);
                     break;
                 case KEY_RIGHT:
                     getyx(win,c_y,c_x);
-                    c_x += 1;
-                    wmove(win, c_y, c_x);
+                    wmove(win, c_y, ++c_x);
                     break;
             }
         }
