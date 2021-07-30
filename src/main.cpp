@@ -4,6 +4,7 @@
 #include <curses.h>
 #include "../include/WindowCreator.hpp"
 
+#define DEFAULT 4
 #define UPTREND 1
 #define DOWNTREND 2
 #define CURRENT_ROW 3
@@ -15,6 +16,7 @@ int main()
 {
     int ch, x, y;
     int c_x, c_y;
+    WINDOW* red_win = nullptr;
     setlocale(LC_ALL, "");
     /*
         \* Inititialization of ncurses window
@@ -35,10 +37,11 @@ int main()
         printf("Your terminal does not support color\n");
         exit(1);
     }
-
+    
     init_pair(DOWNTREND, COLOR_RED, COLOR_BLACK);
     init_pair(UPTREND, COLOR_GREEN, COLOR_BLACK);
     init_pair(CURRENT_ROW, COLOR_WHITE, COLOR_RED);
+    init_pair(DEFAULT, COLOR_WHITE, COLOR_BLACK);
     
     cbreak(); /* Disable line buffer (raw() works similar) */
     noecho(); /* Dont show key on terminal */
@@ -68,19 +71,43 @@ int main()
             switch (ch)
             {
                 case KEY_RESIZE:
+                    getyx(win, c_y, c_x);
                     werase(win);
                     getmaxyx(stdscr, ROWS, COLS);
                     wresize(win, ROWS-1, COLS-1);
                     wborder(win, 0, 0, 0, 0, 0, 0, 0, 0);
+                    wmove(win, c_y, c_x);
                     break;
+                
                 case KEY_UP:
-                    getyx(win,c_y,c_x);
+                    if (red_win != nullptr)
+                    {
+                        wbkgd(red_win, COLOR_PAIR(DEFAULT));
+                        wrefresh(red_win);
+                    }
+                    getyx(win,c_y,c_x); /* TODO: Just getyx once */
                     wmove(win, --c_y, c_x);
+                    wrefresh(win);
+                    
+                    red_win = create_window_uBorder(1,COLS-2,c_y+1,c_x+1);
+                    wbkgd(red_win, COLOR_PAIR(CURRENT_ROW));
+
                     break;
                 case KEY_DOWN:
+                    if (red_win != nullptr)
+                    {
+                        wbkgd(red_win, COLOR_PAIR(DEFAULT));
+                        wrefresh(red_win);
+                        //werase(red_win);
+                    }
                     getyx(win,c_y,c_x);
                     wmove(win, ++c_y, c_x);
+                    wrefresh(win);
+                    red_win = create_window_uBorder(1,COLS-2,c_y+1,c_x+1);
+                    wbkgd(red_win, COLOR_PAIR(CURRENT_ROW));
+
                     break;
+                /*
                 case KEY_LEFT:
                     getyx(win,c_y,c_x);
                     wmove(win, c_y, --c_x);
@@ -89,8 +116,10 @@ int main()
                     getyx(win,c_y,c_x);
                     wmove(win, c_y, ++c_x);
                     break;
+                */
             }
         }
+        wrefresh(red_win);
         wrefresh(win);
     }
 
