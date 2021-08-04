@@ -16,7 +16,9 @@ int main()
 {
     int ch, x, y;
     int c_x, c_y;
-    WINDOW* red_win = nullptr;
+    std::string whitespace = "Fuck my life";
+    
+    //WINDOW* red_win = nullptr;
 
     setlocale(LC_ALL, "");
     /*
@@ -42,7 +44,7 @@ int main()
     init_pair(DEFAULT, COLOR_WHITE, COLOR_BLACK);
     init_pair(DOWNTREND, COLOR_RED, COLOR_BLACK);
     init_pair(UPTREND, COLOR_GREEN, COLOR_BLACK);
-    init_pair(CURRENT_ROW, COLOR_WHITE, COLOR_RED);
+    init_pair(CURRENT_ROW, COLOR_BLACK, COLOR_RED);
     
     
     cbreak(); /* Disable line buffer (raw() works similar) */
@@ -50,26 +52,28 @@ int main()
     keypad(stdscr, TRUE); /* Enable keypad input (F-keys, arrows etc.) */
 
     /* Main Window creation */
-    WINDOW* win = create_window_wBorder(ROWS-1, COLS, 1, 0);
-    /*
+    auto win = create_window_wBorder(ROWS-1, COLS, 1, 0);
+    
     for (int i = 1; i < ROWS-2; i++)
     {
         wmove(win,i,1);
-        wattron(win, COLOR_PAIR(UPTREND));
-        waddch(win,ACS_UARROW);
-        wattroff(win, COLOR_PAIR(UPTREND));
-        wattron(win, COLOR_PAIR(DOWNTREND));
-        waddch(win, ACS_DARROW);
-        wattroff(win, COLOR_PAIR(DOWNTREND));
+        //wattron(win, COLOR_PAIR(UPTREND));
+        //waddch(win,ACS_UARROW);
+        //wattron(win, COLOR_PAIR(DOWNTREND));
+        //waddch(win, ACS_DARROW);
+        wprintw(win,whitespace.c_str());
     }
-    */
-    wmove(win,1,0);
+    wattron(win, COLOR_PAIR(DEFAULT));
+    curs_set(0); // Hide cursor
+    
+    wmove(win,1,1);
     getyx(win, c_y, c_x);
-    red_win = create_window_uBorder(1,COLS-2,c_y+1,c_x+1);
-    wbkgd(red_win, COLOR_PAIR(CURRENT_ROW));
+    //red_win = create_window_uBorder(1,COLS-2,c_y+1,c_x+1);
+    wprintw(win,whitespace.c_str());
+    mvwchgat(win,c_y,c_x,whitespace.size(),WA_HORIZONTAL,CURRENT_ROW,NULL);
+    //wbkgd(red_win, COLOR_PAIR(CURRENT_ROW));
 
     wrefresh(win);
-    wrefresh(red_win);
 
     while (true)
     {
@@ -87,36 +91,24 @@ int main()
                     break;
                 
                 case KEY_UP:
-                    if (red_win != nullptr)
-                    {
-                        wbkgd(red_win, COLOR_PAIR(DEFAULT));
-                        wrefresh(red_win);
-                    }
+                    mvwchgat(win,c_y,c_x,whitespace.size(),WA_HORIZONTAL,DEFAULT,NULL);
                     getyx(win,c_y,c_x); /* TODO: Just getyx once */
                     wmove(win, --c_y, c_x);
                     wrefresh(win);
                     
-                    red_win = create_window_uBorder(1,COLS-2,c_y+1,c_x+1);
-                    wbkgd(red_win, COLOR_PAIR(CURRENT_ROW));
-
+                    mvwchgat(win,c_y,c_x,whitespace.size(),WA_HORIZONTAL,CURRENT_ROW,NULL);
                     break;
                 case KEY_DOWN:
-                    if (red_win != nullptr)
-                    {
-                        wbkgd(red_win, COLOR_PAIR(DEFAULT));
-                        wrefresh(red_win);
-                    }
+                    mvwchgat(win,c_y,c_x,whitespace.size(),WA_HORIZONTAL,DEFAULT,NULL);
                     getyx(win,c_y,c_x);
                     wmove(win, ++c_y, c_x);
                     wrefresh(win);
 
-                    red_win = create_window_uBorder(1,COLS-2,c_y+1,c_x+1);
-                    wbkgd(red_win, COLOR_PAIR(CURRENT_ROW));
+                    mvwchgat(win,c_y,c_x,whitespace.size(),WA_HORIZONTAL,CURRENT_ROW,NULL);
 
                     break;
             }
         }
-        wrefresh(red_win);
         wrefresh(win);
     }
 
