@@ -15,7 +15,7 @@ int ROWS, COLS;
 int main() 
 {
     int ch, x, y;
-    int c_x, c_y;
+    int c_x = 1, c_y = 1;
     std::string whitespace = "Fuck my life";
     
     //WINDOW* red_win = nullptr;
@@ -63,13 +63,11 @@ int main()
         //waddch(win, ACS_DARROW);
         wprintw(win,whitespace.c_str());
     }
-    wattron(win, COLOR_PAIR(DEFAULT));
     curs_set(0); // Hide cursor
     
-    wmove(win,1,1);
-    getyx(win, c_y, c_x);
-    //red_win = create_window_uBorder(1,COLS-2,c_y+1,c_x+1);
-    wprintw(win,whitespace.c_str());
+    wmove(win,c_y, c_x);
+
+//    wprintw(win,whitespace.c_str());
     mvwchgat(win,c_y,c_x,whitespace.size(),WA_HORIZONTAL,CURRENT_ROW,NULL);
     //wbkgd(red_win, COLOR_PAIR(CURRENT_ROW));
 
