@@ -2,15 +2,15 @@
 
 #include <ncurses.h>
 #include <curses.h>
-#include "../include/WindowCreator.hpp"
+#include "../include/WindowManip.hpp"
 
 #define DEFAULT 1
 #define UPTREND 2
 #define DOWNTREND 3
 #define CURRENT_ROW 4
 
-int ROWS, COLS;
 
+int ROWS, COLS;
 
 int main() 
 {
@@ -66,10 +66,7 @@ int main()
     curs_set(0); // Hide cursor
     
     wmove(win,c_y, c_x);
-
-//    wprintw(win,whitespace.c_str());
     mvwchgat(win,c_y,c_x,whitespace.size(),WA_HORIZONTAL,CURRENT_ROW,NULL);
-    //wbkgd(red_win, COLOR_PAIR(CURRENT_ROW));
 
     wrefresh(win);
 
@@ -89,21 +86,10 @@ int main()
                     break;
                 
                 case KEY_UP:
-                    mvwchgat(win,c_y,c_x,whitespace.size(),WA_HORIZONTAL,DEFAULT,NULL);
-                    getyx(win,c_y,c_x); /* TODO: Just getyx once */
-                    wmove(win, --c_y, c_x);
-                    wrefresh(win);
-                    
-                    mvwchgat(win,c_y,c_x,whitespace.size(),WA_HORIZONTAL,CURRENT_ROW,NULL);
+                    HorizontalPosition(win, c_y, c_x, whitespace.size(), DEFAULT, CURRENT_ROW, true);
                     break;
                 case KEY_DOWN:
-                    mvwchgat(win,c_y,c_x,whitespace.size(),WA_HORIZONTAL,DEFAULT,NULL);
-                    getyx(win,c_y,c_x);
-                    wmove(win, ++c_y, c_x);
-                    wrefresh(win);
-
-                    mvwchgat(win,c_y,c_x,whitespace.size(),WA_HORIZONTAL,CURRENT_ROW,NULL);
-
+                    HorizontalPosition(win, c_y, c_x, whitespace.size(), DEFAULT, CURRENT_ROW, false);
                     break;
             }
         }
