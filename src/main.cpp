@@ -1,8 +1,10 @@
 #include <iostream>
+#include <memory>
 
 #include <ncurses.h>
 #include <curses.h>
 #include "../include/WindowManip.hpp"
+#include "../include/Trading.hpp"
 
 #define DEFAULT 1
 #define UPTREND 2
@@ -16,8 +18,11 @@ int main()
 {
     int ch, x, y;
     int c_x = 1, c_y = 1;
-    std::string whitespace = "Fuck my life";
-    
+    //std::unique_ptr<TradingInfo> trading_info = std::make_unique<TradingInfo>();
+    TradingInfo trading_info;
+    trading_info.callAPI("btc");
+    std::string whitespace = trading_info.getBTC();
+
     //WINDOW* red_win = nullptr;
 
     setlocale(LC_ALL, "");
