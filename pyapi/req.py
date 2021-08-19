@@ -1,4 +1,5 @@
 import requests
+import json
 
 # replace the "demo" apikey below with your own key from https://www.alphavantage.co/support/#api-key
 stock_url = 'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=IBM&interval=5min&apikey=4PC87FQ16E7YV46Q'
@@ -9,4 +10,8 @@ btc_url = 'https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&fro
 b = requests.get(btc_url)
 btc_data = b.json()
 
-print(btc_data)
+with open('api.json','w') as f:
+    for line in btc_data:
+        json.dump(btc_data,f)
+    f.close()
+

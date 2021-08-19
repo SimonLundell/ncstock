@@ -1,1 +1,0 @@
-/usr/bin/c++     CMakeFiles/ncstock.dir/src/main.cpp.o  -o ncstock -lncurses 
