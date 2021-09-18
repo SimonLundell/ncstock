@@ -4,6 +4,7 @@
 #include <string>
 #include <unordered_map>
 #include <iostream>
+#include <Poco/Net/HTTPRequest.h>
 
 class TradingInfo
 {

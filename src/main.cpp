@@ -22,7 +22,7 @@ int main()
     TradingInfo trading_info;
     trading_info.callAPI("btc");
     std::string whitespace = trading_info.getBTC();
-
+    
     //WINDOW* red_win = nullptr;
 
     setlocale(LC_ALL, "");
