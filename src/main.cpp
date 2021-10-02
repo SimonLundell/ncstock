@@ -20,8 +20,8 @@ int main()
     int c_x = 1, c_y = 1;
     //std::unique_ptr<TradingInfo> trading_info = std::make_unique<TradingInfo>();
     TradingInfo trading_info;
-    trading_info.callAPI("btc");
-    std::string whitespace = trading_info.getBTC();
+    trading_info.getExchangeRate("BTC", "USD");
+    std::string whitespace = "Buttcoin";
     
     //WINDOW* red_win = nullptr;
 

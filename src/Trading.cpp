@@ -1,12 +1,13 @@
 #include "../include/Trading.hpp"
 
-TradingInfo::TradingInfo()
+TradingInfo::TradingInfo() : 
+    _site("https://www.alphavantage.co/query?"), 
+    _apiKey("&apikey=3PC87FQ16E7YV46Q")
 {
 }
 
-void TradingInfo::callAPI(const std::string asset)
+void TradingInfo::callAPI(const std::string &_path)
 {
-    _path = "https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=BTC&to_currency=USD&apikey=4PC87FQ16E7YV46Q";
     auto uri = Poco::URI(_path);
     auto path = uri.getPathAndQuery();
     auto _session = Poco::Net::HTTPSClientSession(uri.getHost(),uri.getPort());
@@ -21,14 +22,9 @@ void TradingInfo::callAPI(const std::string asset)
     std::istream &is = _session.receiveResponse(res);
     Poco::StreamCopier::copyStream(is, std::cout);
 }
-std::string TradingInfo::getBTC()
-{
-    //auto it = assets.find("Bitcoin");
-    //std::string ret = it->first + std::to_string(it->second);
 
-    return "Bitcoin";
-}
-[[maybe_unused]]std::string TradingInfo::getAFRY()
+void TradingInfo::getExchangeRate(const std::string &asset, const std::string &to_currency)
 {
-    
+    const std::string function = "function=CURRENCY_EXCHANGE_RATE&from_currency=" + asset + "&to_currency=" + to_currency;
+    callAPI(_site + function + _apiKey);
 }
