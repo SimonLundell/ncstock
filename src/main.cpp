@@ -102,6 +102,7 @@ int main()
                         {
                             if (asset->getCurrency() == "BTC")
                             {
+                                // Call refresh (implement)
                                 std::cout << assets.size() << "\n";
                                 break;
                             }
