@@ -10,18 +10,25 @@
 #include <Poco/StreamCopier.h>
 #include <Poco/Path.h>
 #include <Poco/URI.h>
+#include <sstream>
 
-class TradingInfo
+class Asset 
 {
     public:
-        TradingInfo();
-        void callAPI(const std::string &asset);
-        void getExchangeRate(const std::string &asset, const std::string &to_currency);
+        Asset(const std::string &currency);
+        void callAPI();
+        float getExchangeRate(const std::string &to_currency);
+        std::string getCurrency();
         
     private:
-        std::unordered_map<std::string, int> assets;
-
+        const std::string _currency;
         const std::string _apiKey; 
         const std::string _site;
+
+        Poco::URI _uri;
+        std::string _path;
+
+        std::string _function;
+        float _rate;
 };
 #endif

@@ -4,7 +4,7 @@
 #include <ncurses.h>
 #include <curses.h>
 #include "../include/WindowManip.hpp"
-#include "../include/Trading.hpp"
+#include "../include/Asset.hpp"
 
 #define DEFAULT 1
 #define UPTREND 2
@@ -18,11 +18,9 @@ int main()
 {
     int ch, x, y;
     int c_x = 1, c_y = 1;
-    //std::unique_ptr<TradingInfo> trading_info = std::make_unique<TradingInfo>();
-    TradingInfo trading_info;
-    trading_info.getExchangeRate("BTC", "USD");
-    std::string whitespace = "Buttcoin";
-    
+    std::vector<std::unique_ptr<Asset>> assets;
+    //std::unique_ptr<Asset> btc = std::make_unique<Asset>("BTC");
+    std::string whitespace;    
     //WINDOW* red_win = nullptr;
 
     setlocale(LC_ALL, "");
@@ -58,7 +56,7 @@ int main()
 
     /* Main Window creation */
     auto win = create_window_wBorder(ROWS-1, COLS, 1, 0);
-    
+    /*
     for (int i = 1; i < ROWS-2; i++)
     {
         wmove(win,i,1);
@@ -68,10 +66,11 @@ int main()
         //waddch(win, ACS_DARROW);
         wprintw(win,whitespace.c_str());
     }
+    */
     curs_set(0); // Hide cursor
     
     wmove(win,c_y, c_x);
-    mvwchgat(win,c_y,c_x,whitespace.size(),WA_HORIZONTAL,CURRENT_ROW,NULL);
+    mvwchgat(win,c_y,c_x,COLS-2,WA_HORIZONTAL,CURRENT_ROW,NULL);
 
     wrefresh(win);
 
@@ -91,11 +90,36 @@ int main()
                     break;
                 
                 case KEY_UP:
-                    HorizontalPosition(win, c_y, c_x, whitespace.size(), DEFAULT, CURRENT_ROW, true);
+                    HorizontalPosition(win, c_y, c_x, COLS-2, DEFAULT, CURRENT_ROW, true);
                     break;
                 case KEY_DOWN:
-                    HorizontalPosition(win, c_y, c_x, whitespace.size(), DEFAULT, CURRENT_ROW, false);
+                    HorizontalPosition(win, c_y, c_x, COLS-2, DEFAULT, CURRENT_ROW, false);
                     break;
+                case 10: // KEY_ENTER refers to numpad enter. ASCII 10 is "normal" enter
+                    if (!assets.empty())
+                    {
+                        for (auto &asset : assets)
+                        {
+                            if (asset->getCurrency() == "BTC")
+                            {
+                                std::cout << assets.size() << "\n";
+                                break;
+                            }
+                            else
+                            {
+                                assets.push_back(std::make_unique<Asset>("BTC"));
+                            }
+                        }
+                    }
+                    else
+                    {
+                        assets.push_back(std::make_unique<Asset>("BTC"));
+                    }
+                    whitespace = assets.back()->getCurrency() + " " + std::to_string(assets.back()->getExchangeRate("USD"));
+                    wprintw(win,whitespace.c_str());
+                    mvwchgat(win,c_y,c_x,COLS-2,WA_HORIZONTAL,CURRENT_ROW,NULL);
+                    break;
+
             }
         }
         wrefresh(win);
