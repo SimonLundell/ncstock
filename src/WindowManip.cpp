@@ -22,6 +22,6 @@ void HorizontalPosition(WINDOW* win, int &x, int &y, const int &size, const int 
     mvwchgat(win,y,x,size,WA_HORIZONTAL,NOHL,NULL);
     getyx(win,y,x); /* TODO: Just getyx once */
     up ? wmove(win, --y, x) : wmove(win, ++y, x);
-    wrefresh(win);
+    //wrefresh(win);
     mvwchgat(win,y,x,size,WA_HORIZONTAL,HL,NULL);
 }

@@ -12,22 +12,29 @@
 #include <Poco/URI.h>
 #include <sstream>
 
+enum AssetType
+{
+    CRYPTO,
+    STOCK
+};
+
 class Asset 
 {
     public:
-        Asset(const std::string &currency);
+        Asset(AssetType type, const std::string &currency);
         void callAPI();
-        float getExchangeRate(const std::string &to_currency);
+        float getExchangeRate();
         std::string getCurrency();
         
     private:
         const std::string _currency;
         const std::string _apiKey; 
         const std::string _site;
+        const AssetType _type;
+        const std::string to_currency = "USD";
 
         Poco::URI _uri;
         std::string _path;
-
         std::string _function;
         float _rate;
 };

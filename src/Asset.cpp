@@ -1,9 +1,10 @@
 #include "../include/Asset.hpp"
 
-Asset::Asset(const std::string &currency) :
+Asset::Asset(AssetType type, const std::string &currency) :
     _currency(currency),
     _site("https://www.alphavantage.co/query?"), 
-    _apiKey("&apikey=3PC87FQ16E7YV46Q")
+    _apiKey("&apikey=3PC87FQ16E7YV46Q"),
+    _type(type)
 {
 }
 
@@ -25,16 +26,43 @@ void Asset::callAPI()
     std::istringstream ss(output);
     while (ss >> key >> value)
     {
-        if (key == "Rate\":" && value != "{")
+        switch(_type)
         {
-            _rate = std::stof(value.substr(1,value.size()-3));
+            case(AssetType::CRYPTO):
+            {
+                if (key == "Rate\":" && value != "{")
+                {
+                    _rate = std::stof(value.substr(1,value.size()-3));
+                }
+            }
+            case(AssetType::STOCK):
+            {
+                if (key == "close\":" && value != "{")
+                {
+                    _rate = std::stof(value.substr(1,value.size()-3));
+                }
+
+            }
         }
     }
 }
 
-float Asset::getExchangeRate(const std::string &to_currency)
+float Asset::getExchangeRate()
 {
-    _function = "function=CURRENCY_EXCHANGE_RATE&from_currency=" + _currency + "&to_currency=" + to_currency;
+    switch(_type)
+    {
+        case(AssetType::CRYPTO):
+        {
+            _function = "function=CURRENCY_EXCHANGE_RATE&from_currency=" + _currency + "&to_currency=" + to_currency;
+            break;
+        }
+        case(AssetType::STOCK):
+        {
+            _function = "function=TIME_SERIES_INTRADAY&symbol=IBM&interval=5min";
+            break;
+        }
+    }
+
     _uri = Poco::URI(_site + _function + _apiKey);
     _path = _uri.getPathAndQuery();
     
