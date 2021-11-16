@@ -2,8 +2,8 @@
 
 Asset::Asset(AssetType type, const std::string &currency) :
     _currency(currency),
-    _site("https://www.alphavantage.co/query?"), 
     _apiKey("&apikey=3PC87FQ16E7YV46Q"),
+    _site("https://www.alphavantage.co/query?"), 
     _type(type)
 {
 }

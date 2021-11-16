@@ -8,6 +8,7 @@ int hashtable(const std::string &inp)
     {
         return it->second;
     }
+    return 0;
 }
 
 std::string getString()
