@@ -58,7 +58,7 @@ float Asset::getExchangeRate()
         }
         case(AssetType::STOCK):
         {
-            _function = "function=TIME_SERIES_INTRADAY&symbol=IBM&interval=5min";
+            _function = "function=TIME_SERIES_INTRADAY&symbol="+_currency+"&interval=5min";
             break;
         }
     }

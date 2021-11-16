@@ -16,8 +16,8 @@ import csv
 #        json.dump(btc_data,f)
 #    f.close()
 
-#url = "https://www.alphavantage.co/query?function=LISTING_STATUS&date=2021-11-15&apikey=4PC87FQ16E7YV46Q"
-url = "https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=BA&apikey=4PC87FQ16E7YV46Q&datatype=csv"
+url = "https://www.alphavantage.co/query?function=LISTING_STATUS&date=2021-11-15&apikey=4PC87FQ16E7YV46Q"
+#url = "https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=BA&apikey=4PC87FQ16E7YV46Q&datatype=csv"
 
 d = requests.get(url)
 dd = d.content.decode('utf-8')

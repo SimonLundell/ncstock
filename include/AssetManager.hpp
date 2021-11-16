@@ -5,6 +5,7 @@
 
 #include <Asset.hpp>
 
+
 class AssetManager
 {
     public:
@@ -12,6 +13,7 @@ class AssetManager
 
         void add_asset(std::shared_ptr<Asset> asset);
         std::shared_ptr<Asset> get_asset(const std::string& name);
+
 
         std::vector<std::shared_ptr<Asset>> assets;
 };

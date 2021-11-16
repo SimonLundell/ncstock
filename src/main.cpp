@@ -12,11 +12,18 @@ int ROWS, COLS;
 
 int main() 
 {
-    Window window(WindowType::MAIN);
     int ch; // To store keystrokes
+    Window window(WindowType::MAIN);
     AssetManager a_manager;
     a_manager.add_asset(std::make_shared<Asset>(AssetType::CRYPTO, "BTC"));
     a_manager.add_asset(std::make_shared<Asset>(AssetType::STOCK, "IBM"));
+    a_manager.add_asset(std::make_shared<Asset>(AssetType::STOCK, "BABA"));
+    a_manager.add_asset(std::make_shared<Asset>(AssetType::STOCK, "YELP"));
+    a_manager.add_asset(std::make_shared<Asset>(AssetType::STOCK, "ABB"));
+    a_manager.add_asset(std::make_shared<Asset>(AssetType::STOCK, "NIO"));
+    a_manager.add_asset(std::make_shared<Asset>(AssetType::STOCK, "NVDA"));
+    a_manager.add_asset(std::make_shared<Asset>(AssetType::STOCK, "SQ"));
+    a_manager.add_asset(std::make_shared<Asset>(AssetType::STOCK, "AMD"));
 
     for (size_t i = 0; i < a_manager.assets.size(); i++)
     {
