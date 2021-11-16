@@ -7,6 +7,10 @@ WINDOW* create_window_wBorder(const int &rows, const int &cols, const int &pos_x
 
 WINDOW* create_window_uBorder(const int &rows, const int &cols, const int &pos_x, const int &pos_y);
 
+WINDOW* create_new_window(const int &rows, const int &cols, const int &pos_x, const int &pos_y);
+
+void delete_current_window(WINDOW* win);
+
 void HorizontalPosition(WINDOW* win, int &x, int &y, const int &size, const int &NOHL, const int& HL,const bool &up);
 
 #endif

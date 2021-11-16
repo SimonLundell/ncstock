@@ -17,6 +17,22 @@ WINDOW* create_window_uBorder(const int &rows, const int &cols, const int &pos_x
     return local_win;
 }
 
+WINDOW* create_new_window(const int &rows, const int &cols, const int &pos_x, const int &pos_y)
+{
+    auto new_window = newwin(rows, cols, pos_x, pos_y);
+    box(new_window,0 ,0);
+    wrefresh(new_window);
+
+    return new_window;
+}
+
+void delete_current_window(WINDOW* win)
+{
+    wborder(win, ' ', ' ', ' ',' ',' ',' ',' ',' ');
+    wrefresh(win);
+    delwin(win);
+}
+
 void HorizontalPosition(WINDOW* win, int &x, int &y, const int &size, const int &NOHL, const int& HL,const bool &up)
 {
     mvwchgat(win,y,x,size,WA_HORIZONTAL,NOHL,NULL);
