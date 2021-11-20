@@ -13,6 +13,8 @@ int ROWS, COLS;
 int main() 
 {
     int ch; // To store keystrokes
+
+    // Initialize window with border
     Window window(WindowType::MAIN);
 
     // Asset setup
@@ -25,6 +27,7 @@ int main()
         wprintw(win, a_manager.print_asset_info(i));
     }
     
+
     //for (int i = 0; i < assets.size(); i++)
     //{
     //    wmove(win,i+1,1);
@@ -36,7 +39,7 @@ int main()
     //    wprintw(win,whitespace.c_str());
     //}
     
-    
+    wborder(win, 0, 0, 0, 0, 0, 0, 0, 0); // Draw border again to avoid edge disappear due to loop
     wmove(win, window.c_y, window.c_x);
     mvwchgat(win, window.c_y, window.c_x, COLS-2, WA_HORIZONTAL, CURRENT_ROW,NULL);
 
@@ -68,13 +71,13 @@ int main()
                     getyx(win, curr_y, curr_x);
                     a_manager.remove_asset(curr_y);
                     wclear(win);
-                    wborder(win, 0, 0, 0, 0, 0, 0, 0, 0);
                     
                     for (size_t i = 0; i < a_manager.assets.size(); i++)
                     {
                         wmove(win,i+1,1);
                         wprintw(win, a_manager.print_asset_info(i));
                     }
+                    wborder(win, 0, 0, 0, 0, 0, 0, 0, 0); // after loop to avoid edge disappear
                     r_HorizontalPosition(win, curr_y, curr_x, COLS-2, DEFAULT, CURRENT_ROW);
                     wmove(win, curr_y, curr_x);
                     

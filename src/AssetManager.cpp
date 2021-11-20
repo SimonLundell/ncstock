@@ -41,7 +41,7 @@ const char* AssetManager::print_asset_info(const size_t& idx)
     std::string rate = std::to_string(assets[idx]->getRate());
     std::string comb = name + " " + rate + "\n";
 
-    char* output = (char*)calloc(name.size()+rate.size()+4,sizeof(char)); // Avoid messed up characters in print
+    char* output = (char*)calloc(name.size()+rate.size(),sizeof(char)); // Avoid messed up characters in print
     strcpy(output,comb.c_str());
 
     return output;  

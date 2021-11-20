@@ -35,11 +35,6 @@ void Asset::callAPI()
 {
     auto _session = Poco::Net::HTTPSClientSession(_uri.getHost(),_uri.getPort());
 
-    //if (!_session)
-    //{
-    //    std::cerr << "Connection couldn't be resolved, exiting\n";
-    //    exit(1);
-    //}
 
     auto _asset_info = Poco::Net::HTTPRequest(Poco::Net::HTTPRequest::HTTP_GET, 
                                             _path,
@@ -52,6 +47,11 @@ void Asset::callAPI()
     std::string value;
     
     std::istream &is = _session.receiveResponse(res);
+    if (res.getStatus() == 400)
+    {
+        std::cerr << "Connection couldn't be resolved, exiting\n";
+        exit(1);
+    }
     Poco::StreamCopier::copyToString(is, output);
     std::istringstream ss(output);
     while (ss >> key >> value)
