@@ -22,13 +22,19 @@ enum AssetType
 class Asset 
 {
     public:
+        // Constructor
         Asset(AssetType type, const std::string &currency);
+
+        // Member functions
+        void queryExchangeRate();
         void callAPI();
-        float getExchangeRate();
-        std::string getCurrency();
-        
+
+        // Getters, without new API call
+        std::string getCurrency() const;
+        float getRate() const;
+
     private:
-        const std::string _currency;
+        const std::string _assetName;
         const std::string _apiKey; 
         const std::string _site;
         const AssetType _type;

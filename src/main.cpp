@@ -14,21 +14,14 @@ int main()
 {
     int ch; // To store keystrokes
     Window window(WindowType::MAIN);
+
+    // Asset setup
     AssetManager a_manager;
-    a_manager.add_asset(std::make_shared<Asset>(AssetType::CRYPTO, "BTC"));
-    a_manager.add_asset(std::make_shared<Asset>(AssetType::STOCK, "IBM"));
-    a_manager.add_asset(std::make_shared<Asset>(AssetType::STOCK, "BABA"));
-    a_manager.add_asset(std::make_shared<Asset>(AssetType::STOCK, "YELP"));
-    a_manager.add_asset(std::make_shared<Asset>(AssetType::STOCK, "ABB"));
-    a_manager.add_asset(std::make_shared<Asset>(AssetType::STOCK, "NIO"));
-    a_manager.add_asset(std::make_shared<Asset>(AssetType::STOCK, "NVDA"));
-    a_manager.add_asset(std::make_shared<Asset>(AssetType::STOCK, "SQ"));
-    a_manager.add_asset(std::make_shared<Asset>(AssetType::STOCK, "AMD"));
 
     for (size_t i = 0; i < a_manager.assets.size(); i++)
     {
         wmove(window.get_win(),i+1,1);
-        wprintw(window.get_win(), (a_manager.assets[i]->getCurrency() + " " + std::to_string(a_manager.assets[i]->getExchangeRate()) + "\n").c_str());
+        wprintw(window.get_win(), a_manager.print_asset_info(i));
     }
     
     //for (int i = 0; i < assets.size(); i++)
@@ -69,6 +62,26 @@ int main()
                 case KEY_DOWN:
                     HorizontalPosition(window.get_win(), window.c_y, window.c_x, COLS-2, DEFAULT, CURRENT_ROW, false);
                     break;
+                case 330: // Delete
+                    int curr_y, curr_x;
+                    getyx(window.get_win(), curr_y, curr_x);
+                    a_manager.remove_asset(curr_y);
+                    wclear(window.get_win());
+                    wborder(window.get_win(), 0, 0, 0, 0, 0, 0, 0, 0);
+                    
+                    for (size_t i = 0; i < a_manager.assets.size(); i++)
+                    {
+                        wmove(window.get_win(),i+1,1);
+                        wprintw(window.get_win(), a_manager.print_asset_info(i));
+                    }
+                    r_HorizontalPosition(window.get_win(), curr_y, curr_x, COLS-2, DEFAULT, CURRENT_ROW);
+                    wmove(window.get_win(), curr_y, curr_x);
+                    
+                    break;
+                //default:
+                //    std::string myString = std::to_string(ch);
+                //    wprintw(window.get_win(),myString.c_str());
+                //    break;
                 //case 10: // KEY_ENTER refers to numpad enter. ASCII 10 is "normal" enter
                 //    current_window = create_new_window(ROWS, COLS, 0, 0);
                 //    break;

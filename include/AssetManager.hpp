@@ -9,10 +9,15 @@
 class AssetManager
 {
     public:
-        AssetManager() = default;
+        // Constructor, populates assets
+        AssetManager();
 
-        void add_asset(std::shared_ptr<Asset> asset);
         std::shared_ptr<Asset> get_asset(const std::string& name);
+        void add_asset(std::shared_ptr<Asset> asset);
+        void remove_asset(const int& row);
+
+        const char* print_asset_info(const size_t& idx);
+
 
 
         std::vector<std::shared_ptr<Asset>> assets;
