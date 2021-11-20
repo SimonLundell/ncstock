@@ -17,11 +17,12 @@ int main()
 
     // Asset setup
     AssetManager a_manager;
+    auto win = window.get_win();
 
     for (size_t i = 0; i < a_manager.assets.size(); i++)
     {
-        wmove(window.get_win(),i+1,1);
-        wprintw(window.get_win(), a_manager.print_asset_info(i));
+        wmove(win,i+1,1);
+        wprintw(win, a_manager.print_asset_info(i));
     }
     
     //for (int i = 0; i < assets.size(); i++)
@@ -36,10 +37,10 @@ int main()
     //}
     
     
-    wmove(window.get_win(),window.c_y, window.c_x);
-    mvwchgat(window.get_win(),window.c_y,window.c_x,COLS-2,WA_HORIZONTAL,CURRENT_ROW,NULL);
+    wmove(win, window.c_y, window.c_x);
+    mvwchgat(win, window.c_y, window.c_x, COLS-2, WA_HORIZONTAL, CURRENT_ROW,NULL);
 
-    wrefresh(window.get_win());
+    wrefresh(win);
 
     while (true)
     {
@@ -48,40 +49,36 @@ int main()
             switch (ch)
             {
                 case KEY_RESIZE:
-                    getyx(window.get_win(), window.c_y, window.c_x);
-                    werase(window.get_win());
+                    getyx(win, window.c_y, window.c_x);
+                    werase(win);
                     getmaxyx(stdscr, ROWS, COLS);
-                    wresize(window.get_win(), ROWS-1, COLS-1);
-                    wborder(window.get_win(), 0, 0, 0, 0, 0, 0, 0, 0);
-                    wmove(window.get_win(), window.c_y, window.c_x);
+                    wresize(win, ROWS-1, COLS-1);
+                    wborder(win, 0, 0, 0, 0, 0, 0, 0, 0);
+                    wmove(win, window.c_y, window.c_x);
                     break;
                 
                 case KEY_UP:
-                    HorizontalPosition(window.get_win(), window.c_y, window.c_x, COLS-2, DEFAULT, CURRENT_ROW, true);
+                    HorizontalPosition(win, window.c_y, window.c_x, COLS-2, DEFAULT, CURRENT_ROW, true);
                     break;
                 case KEY_DOWN:
-                    HorizontalPosition(window.get_win(), window.c_y, window.c_x, COLS-2, DEFAULT, CURRENT_ROW, false);
+                    HorizontalPosition(win, window.c_y, window.c_x, COLS-2, DEFAULT, CURRENT_ROW, false);
                     break;
                 case 330: // Delete
                     int curr_y, curr_x;
-                    getyx(window.get_win(), curr_y, curr_x);
+                    getyx(win, curr_y, curr_x);
                     a_manager.remove_asset(curr_y);
-                    wclear(window.get_win());
-                    wborder(window.get_win(), 0, 0, 0, 0, 0, 0, 0, 0);
+                    wclear(win);
+                    wborder(win, 0, 0, 0, 0, 0, 0, 0, 0);
                     
                     for (size_t i = 0; i < a_manager.assets.size(); i++)
                     {
-                        wmove(window.get_win(),i+1,1);
-                        wprintw(window.get_win(), a_manager.print_asset_info(i));
+                        wmove(win,i+1,1);
+                        wprintw(win, a_manager.print_asset_info(i));
                     }
-                    r_HorizontalPosition(window.get_win(), curr_y, curr_x, COLS-2, DEFAULT, CURRENT_ROW);
-                    wmove(window.get_win(), curr_y, curr_x);
+                    r_HorizontalPosition(win, curr_y, curr_x, COLS-2, DEFAULT, CURRENT_ROW);
+                    wmove(win, curr_y, curr_x);
                     
                     break;
-                //default:
-                //    std::string myString = std::to_string(ch);
-                //    wprintw(window.get_win(),myString.c_str());
-                //    break;
                 //case 10: // KEY_ENTER refers to numpad enter. ASCII 10 is "normal" enter
                 //    current_window = create_new_window(ROWS, COLS, 0, 0);
                 //    break;
@@ -94,7 +91,7 @@ int main()
                 }
             }
         }
-        wrefresh(window.get_win());
+        wrefresh(win);
     }
 
     //endloop:

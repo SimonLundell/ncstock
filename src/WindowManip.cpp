@@ -33,11 +33,31 @@ void delete_current_window(WINDOW* win)
     delwin(win);
 }
 
-void HorizontalPosition(WINDOW* win, int &x, int &y, const int &size, const int &NOHL, const int& HL, const bool &up)
+void HorizontalPosition(WINDOW* win, int &y, int &x, const int &size, const int &NOHL, const int& HL, const bool &up)
 {
-    mvwchgat(win,y,x,size,WA_HORIZONTAL,NOHL,NULL);
+    int max_y, max_x;
+    getmaxyx(win, max_y, max_x);
+    mvwchgat(win, y, x, size,WA_HORIZONTAL,NOHL,NULL);
+    
     getyx(win,y,x); /* TODO: Just getyx once */
-    up ? wmove(win, --y, x) : wmove(win, ++y, x);
+    if (up && y == 1)
+    {
+        y = max_y - 2;
+        wmove(win, y, max_x);
+    }
+    else if (up)
+    {
+        wmove(win, --y, x);
+    }
+    else if (!up && y == max_y-2)
+    {
+        y = 1;
+        wmove(win, y, x);
+    }
+    else
+    {
+        wmove(win, ++y, x);
+    }
     //wrefresh(win);
     mvwchgat(win,y,x,size,WA_HORIZONTAL,HL,NULL);
 }

@@ -11,7 +11,7 @@ WINDOW* create_new_window(const int &rows, const int &cols, const int &pos_x, co
 
 void delete_current_window(WINDOW* win);
 
-void HorizontalPosition(WINDOW* win, int &x, int &y, const int &size, const int &NOHL, const int& HL,const bool &up);
+void HorizontalPosition(WINDOW* win, int &y, int &x, const int &size, const int &NOHL, const int& HL,const bool &up);
 
 void r_HorizontalPosition(WINDOW* win, int &y, int &x, const int &size, const int &NOHL, const int& HL);
 
