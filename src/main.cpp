@@ -1,8 +1,10 @@
 #include <iostream>
 #include <memory>
+#include <chrono>
 
 #include <ncurses.h>
 #include <curses.h>
+#include "../include/UserInput.hpp"
 #include "../include/WindowManip.hpp"
 #include "../include/Asset.hpp"
 #include "../include/Window.hpp"
@@ -12,7 +14,10 @@ int ROWS, COLS;
 
 int main() 
 {
+    auto now = std::chrono::system_clock::now();
+    [[maybe_unused]]auto timer = now + std::chrono::seconds(10);
     int ch; // To store keystrokes
+    int curr_y, curr_x;
 
     // Initialize window with border
     Window window(WindowType::MAIN);
@@ -47,6 +52,13 @@ int main()
 
     while (true)
     {
+        /*now = std::chrono::system_clock::now();
+        if (now > timer)
+        {
+            a_manager.update_assets();
+            timer = now + std::chrono::seconds(10);
+        }
+        */
         if ((ch = getch()) != ERR)
         {
             switch (ch)
@@ -67,9 +79,29 @@ int main()
                     HorizontalPosition(win, window.c_y, window.c_x, COLS-2, DEFAULT, CURRENT_ROW, false);
                     break;
                 case 330: // Delete
-                    int curr_y, curr_x;
                     getyx(win, curr_y, curr_x);
                     a_manager.remove_asset(curr_y);
+                    wclear(win);
+                    
+                    for (size_t i = 0; i < a_manager.assets.size(); i++)
+                    {
+                        wmove(win,i+1,1);
+                        wprintw(win, a_manager.print_asset_info(i));
+                    }
+                    wborder(win, 0, 0, 0, 0, 0, 0, 0, 0); // after loop to avoid edge disappear
+                    r_HorizontalPosition(win, curr_y, curr_x, COLS-2, DEFAULT, CURRENT_ROW);
+                    wmove(win, curr_y, curr_x);
+                    
+                    break;
+                case 97:
+                    std::string asset_type = Input::getString();
+                    std::string new_asset = Input::getString();
+                    
+                    AssetType type;
+                    (asset_type == "crypto") ? type = CRYPTO : type = STOCK;
+                    a_manager.add_asset(type, new_asset);
+
+                    getyx(win, curr_y, curr_x);
                     wclear(win);
                     
                     for (size_t i = 0; i < a_manager.assets.size(); i++)

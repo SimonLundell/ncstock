@@ -89,4 +89,3 @@ float Asset::getRate() const
 {
     return _rate;
 }
-

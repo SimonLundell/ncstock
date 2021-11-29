@@ -1,14 +1,21 @@
+#ifndef USER_INPUT_H
+#define USER_INPUT_H
+
 #include <string>
 #include <map>
 #include <ncurses.h>
 
-enum attrib {quit, 
-            bold,
-            underline,
-            unbold,};
+namespace Input
+{
+    enum attrib {quit, 
+                bold,
+                underline,
+                unbold,};
 
-std::map<std::string, attrib> queries{{"quit", quit},{"bold", bold},{"underline", underline},{"clear", unbold}};
 
-int hashtable(const std::string &inp);
+    int hashtable(const std::string &inp);
 
-std::string getString();
+    std::string getString();
+} // Input
+
+#endif

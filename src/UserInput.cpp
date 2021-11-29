@@ -1,24 +1,28 @@
 #include "../include/UserInput.hpp"
 
-int hashtable(const std::string &inp) 
+namespace Input
 {
-    std::map<std::string, attrib>::iterator it;
-    it = queries.find(inp);
-    if (it != queries.end())
+    int hashtable(const std::string &inp) 
     {
-        return it->second;
+        std::map<std::string, attrib> queries{{"quit", quit},{"bold", bold},{"underline", underline},{"clear", unbold}};
+        std::map<std::string, attrib>::iterator it;
+        it = queries.find(inp);
+        if (it != queries.end())
+        {
+            return it->second;
+        }
+        return 0;
     }
-    return 0;
-}
 
-std::string getString()
-{
-    std::string msg;
-    int n = getch();
-    while (n != '\n')
+    std::string getString()
     {
-        msg.push_back(n); /* Push back character from getch() to msg while it is not newline */ 
-        n = getch();
+        std::string msg;
+        int n = getch();
+        while (n != '\n')
+        {
+            msg.push_back(n); /* Push back character from getch() to msg while it is not newline */ 
+            n = getch();
+        }
+        return msg;
     }
-    return msg;
-}
+} // input

@@ -13,8 +13,9 @@ class AssetManager
         AssetManager();
 
         std::shared_ptr<Asset> get_asset(const std::string& name);
-        void add_asset(std::shared_ptr<Asset> asset);
+        void add_asset(AssetType type, const std::string& name);
         void remove_asset(const int& row);
+        void update_assets();
 
         const char* print_asset_info(const size_t& idx);
 

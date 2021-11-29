@@ -2,20 +2,20 @@
 
 AssetManager::AssetManager()
 {
-    this->add_asset(std::make_shared<Asset>(AssetType::CRYPTO, "BTC"));
-    this->add_asset(std::make_shared<Asset>(AssetType::STOCK, "IBM"));
-    this->add_asset(std::make_shared<Asset>(AssetType::STOCK, "BABA"));
-    this->add_asset(std::make_shared<Asset>(AssetType::STOCK, "YELP"));
-    this->add_asset(std::make_shared<Asset>(AssetType::STOCK, "ABB"));
-    this->add_asset(std::make_shared<Asset>(AssetType::STOCK, "NIO"));
-    this->add_asset(std::make_shared<Asset>(AssetType::STOCK, "NVDA"));
-    this->add_asset(std::make_shared<Asset>(AssetType::STOCK, "SQ"));
-    this->add_asset(std::make_shared<Asset>(AssetType::STOCK, "AMD"));
+    this->add_asset(AssetType::CRYPTO, "BTC");
+    this->add_asset(AssetType::STOCK, "IBM");
+    this->add_asset(AssetType::STOCK, "BABA");
+    this->add_asset(AssetType::STOCK, "YELP");
+    this->add_asset(AssetType::STOCK, "ABB");
+    this->add_asset(AssetType::STOCK, "NIO");
+    this->add_asset(AssetType::STOCK, "NVDA");
+    this->add_asset(AssetType::STOCK, "SQ");
+    this->add_asset(AssetType::STOCK, "AMD");
 }
 
-void AssetManager::add_asset(std::shared_ptr<Asset> asset)
+void AssetManager::add_asset(AssetType type, const std::string& name)
 {
-    assets.emplace_back(asset);
+    assets.emplace_back(std::make_shared<Asset>(type, name));
     std::sort(assets.begin(), assets.end(), [](std::shared_ptr<Asset> &ass1, std::shared_ptr<Asset> &ass2){return ass1->getCurrency() < ass2->getCurrency();});
 }
 
@@ -45,4 +45,13 @@ const char* AssetManager::print_asset_info(const size_t& idx)
     strcpy(output,comb.c_str());
 
     return output;  
+}
+
+// Should update the rate of all assets in the list
+void AssetManager::update_assets()
+{
+    for (const auto& asset : assets)
+    {
+        asset->queryExchangeRate();
+    }
 }
