@@ -13,9 +13,8 @@
 
 int ROWS, COLS;
 
-class Run
+struct Run
 {
-    public:
     static void run()
     {
     auto now = std::chrono::system_clock::now();
