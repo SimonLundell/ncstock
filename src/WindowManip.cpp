@@ -58,11 +58,23 @@ void HorizontalPosition(WINDOW* win, int &y, int &x, const int &size, const int 
     {
         wmove(win, ++y, x);
     }
-    //wrefresh(win);
     mvwchgat(win,y,x,size,WA_HORIZONTAL,HL,NULL);
 }
 
 void r_HorizontalPosition(WINDOW* win, int &y, int &x, const int &size, const int &NOHL, const int& HL)
 {
     mvwchgat(win,y,x,size,WA_HORIZONTAL,HL,NULL);
+    wmove(win, y, x);
+}
+
+void refresh_window(WINDOW* win, AssetManager& a_manager)
+{
+    wclear(win);
+
+    for (size_t i = 0; i < a_manager.assets.size(); i++)
+    {
+        wmove(win,i+1,1);
+        wprintw(win, a_manager.print_asset_info(i));
+    }
+    wborder(win, 0, 0, 0, 0, 0, 0, 0, 0); // after loop to avoid edge disappear
 }

@@ -5,10 +5,10 @@
 
 #include <ncurses.h>
 #include <curses.h>
-#include "../include/UserInput.hpp"
-#include "../include/WindowManip.hpp"
-#include "../include/Asset.hpp"
 #include "../include/Window.hpp"
+#include "../include/WindowManip.hpp"
+#include "../include/UserInput.hpp"
+#include "../include/Asset.hpp"
 #include "../include/AssetManager.hpp"
 
 int ROWS, COLS;
@@ -48,7 +48,7 @@ struct Run
         
         wborder(win, 0, 0, 0, 0, 0, 0, 0, 0); // Draw border again to avoid edge disappear due to loop
         wmove(win, window.c_y, window.c_x);
-        mvwchgat(win, window.c_y, window.c_x, COLS-2, WA_HORIZONTAL, CURRENT_ROW,NULL);
+        mvwchgat(win, window.c_y, window.c_x, COLS-2, WA_HORIZONTAL, CURRENT_ROW, NULL);
 
         wrefresh(win);
 
@@ -83,17 +83,11 @@ struct Run
                     case 330: // Delete
                         getyx(win, window.c_y, window.c_x);
                         a_manager.remove_asset(window.c_y);
-                        wclear(win);
-                        
-                        for (size_t i = 0; i < a_manager.assets.size(); i++)
-                        {
-                            wmove(win,i+1,1);
-                            wprintw(win, a_manager.print_asset_info(i));
-                        }
-                        wborder(win, 0, 0, 0, 0, 0, 0, 0, 0); // after loop to avoid edge disappear
+
+                        refresh_window(win, a_manager);
+
                         r_HorizontalPosition(win, window.c_y, window.c_x, COLS-2, DEFAULT, CURRENT_ROW);
-                        wmove(win, window.c_y, window.c_x);
-                        
+
                         break;
                     case 97:
                         getyx(win, window.c_y, window.c_x);
@@ -104,16 +98,9 @@ struct Run
                         (asset_type == "crypto") ? type = CRYPTO : type = STOCK;
                         a_manager.add_asset(type, new_asset);
 
-                        wclear(win);
-                        
-                        for (size_t i = 0; i < a_manager.assets.size(); i++)
-                        {
-                            wmove(win,i+1,1);
-                            wprintw(win, a_manager.print_asset_info(i));
-                        }
-                        wborder(win, 0, 0, 0, 0, 0, 0, 0, 0); // after loop to avoid edge disappear
+                        refresh_window(win, a_manager);
+
                         r_HorizontalPosition(win, window.c_y, window.c_x, COLS-2, DEFAULT, CURRENT_ROW);
-                        wmove(win, window.c_y, window.c_x);
                         
                         break;
                     //case 10: // KEY_ENTER refers to numpad enter. ASCII 10 is "normal" enter
