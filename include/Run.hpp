@@ -28,10 +28,10 @@ struct Run
         AssetManager a_manager;
         auto win = window.get_win();
 
-        for (size_t i = 0; i < a_manager.assets.size(); i++)
+        for (size_t i = 0; i < a_manager.raw_info.size(); i++)
         {
             wmove(win,i+1,1);
-            wprintw(win, a_manager.print_asset_info(i));
+            wprintw(win, a_manager.raw_info[i]);
         }
         
 
@@ -77,42 +77,40 @@ struct Run
                     case KEY_UP:
                         HorizontalPosition(win, window.c_y, window.c_x, COLS-2, DEFAULT, CURRENT_ROW, true);
                         break;
+                    
                     case KEY_DOWN:
                         HorizontalPosition(win, window.c_y, window.c_x, COLS-2, DEFAULT, CURRENT_ROW, false);
                         break;
+                    
                     case 330: // Delete
                         getyx(win, window.c_y, window.c_x);
                         a_manager.remove_asset(window.c_y);
 
                         refresh_window(win, a_manager);
-
                         r_HorizontalPosition(win, window.c_y, window.c_x, COLS-2, DEFAULT, CURRENT_ROW);
 
                         break;
+
                     case 97:
+                        a_manager.save_cache();
                         getyx(win, window.c_y, window.c_x);
+
                         std::string asset_type = Input::getString(window);
                         std::string new_asset = Input::getString(window);
+                        
                         AssetType type;
-
                         (asset_type == "crypto") ? type = CRYPTO : type = STOCK;
                         a_manager.add_asset(type, new_asset);
 
                         refresh_window(win, a_manager);
-
                         r_HorizontalPosition(win, window.c_y, window.c_x, COLS-2, DEFAULT, CURRENT_ROW);
-                        
                         break;
-                    //case 10: // KEY_ENTER refers to numpad enter. ASCII 10 is "normal" enter
-                    //    current_window = create_new_window(ROWS, COLS, 0, 0);
-                    //    break;
-                    //case 23: // KEY_ESCAPE
-                    //    delete_current_window(current_window);
-                    //    break;
 
-                    {
-                        break;
-                    }
+                    //case 10: // KEY_ENTER refers to numpad enter. ASCII 10 is "normal" enter
+                    //    break;
+                    
+                    //case 23: // KEY_ESCAPE
+                    //    break;
                 }
             }
             wrefresh(win);

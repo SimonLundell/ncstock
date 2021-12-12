@@ -2,6 +2,11 @@
 
 AssetManager::AssetManager()
 {
+    this->read_cache();
+}
+
+void AssetManager::populate_assets()
+{
     this->add_asset(AssetType::CRYPTO, "BTC");
     this->add_asset(AssetType::STOCK, "IBM");
     this->add_asset(AssetType::STOCK, "BABA");
@@ -53,5 +58,40 @@ void AssetManager::update_assets()
     for (const auto& asset : assets)
     {
         asset->queryExchangeRate();
+    }
+}
+
+void AssetManager::save_cache()
+{
+    std::ofstream data;
+    data.open("../temp/cache.txt");
+    for (size_t idx = 0; idx < assets.size(); idx++)
+    {
+        std::string name = assets[idx]->getCurrency();
+        std::string rate = std::to_string(assets[idx]->getRate());
+        std::string comb = name + " " + rate + "\n";
+        data << comb;
+    }
+}
+
+void AssetManager::read_cache()
+{
+    std::string name;
+    std::string rate;
+    std::string line;
+    std::ifstream cache("../temp/cache.txt");
+    if (cache.is_open())
+    {
+        while (getline(cache, line))
+        {
+            std::stringstream ss(line);
+            while (ss >> name >> rate)
+            {
+                std::string comb = name + " " + rate;
+                char* output = (char*)calloc(name.size()+rate.size(),sizeof(char)); // Avoid messed up characters in print
+                strcpy(output,comb.c_str());
+                raw_info.push_back(output);
+            }
+        }
     }
 }
