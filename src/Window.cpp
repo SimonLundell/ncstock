@@ -13,7 +13,7 @@ Window::Window(WindowType type)
     
     /* stdscr inits */
     getmaxyx(stdscr, ROWS, COLS); /* get size of stdscr (terminal) and return to ROWS, COLS */
-    mvwprintw(stdscr, 0, 0, "Quit: quit. Bold text: bold. Clear attributes: clear");
+    mvwprintw(stdscr, 0, 0, "Add asset: \"a\": type -> name");
     wrefresh(stdscr);
 
     if (has_colors() == FALSE) 

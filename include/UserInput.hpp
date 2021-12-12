@@ -4,6 +4,7 @@
 #include <string>
 #include <map>
 #include <ncurses.h>
+#include "Window.hpp"
 
 namespace Input
 {
@@ -15,7 +16,7 @@ namespace Input
 
     int hashtable(const std::string &inp);
 
-    std::string getString();
+    std::string getString(Window& window);
 } // Input
 
 #endif

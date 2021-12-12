@@ -14,14 +14,27 @@ namespace Input
         return 0;
     }
 
-    std::string getString()
+    std::string getString(Window& window)
     {
         std::string msg;
+        int c_y, c_x;
+        
+        getyx(window.get_win(), c_y, c_x);
+
         int n = getch();
+        mvwaddch(window.get_win(), c_y, c_x, n);
+        c_x++;
+        
+        wmove(window.get_win(), c_y, c_x);
+        wrefresh(window.get_win());
         while (n != '\n')
         {
             msg.push_back(n); /* Push back character from getch() to msg while it is not newline */ 
             n = getch();
+            mvwaddch(window.get_win(), c_y, c_x, n);
+            c_x++;
+            wmove(window.get_win(), c_y, c_x);
+            wrefresh(window.get_win());
         }
         return msg;
     }
