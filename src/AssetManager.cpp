@@ -16,12 +16,25 @@ void AssetManager::populate_assets()
     this->add_asset(AssetType::STOCK, "NVDA");
     this->add_asset(AssetType::STOCK, "SQ");
     this->add_asset(AssetType::STOCK, "AMD");
+
+    save_cache();
 }
 
 void AssetManager::add_asset(AssetType type, const std::string& name)
 {
+    for (const auto& asset : assets)
+    {
+        if (asset->getCurrency().find(name) != std::string::npos)
+        {
+            return;
+        }
+    }
     assets.emplace_back(std::make_shared<Asset>(type, name));
-    std::sort(assets.begin(), assets.end(), [](std::shared_ptr<Asset> &ass1, std::shared_ptr<Asset> &ass2){return ass1->getCurrency() < ass2->getCurrency();});
+    std::sort(assets.begin(), assets.end(), 
+    [](std::shared_ptr<Asset> &ass1, std::shared_ptr<Asset> &ass2)
+    {
+        return ass1->getCurrency() < ass2->getCurrency();
+    });
 }
 
 std::shared_ptr<Asset> AssetManager::get_asset(const std::string& name)
@@ -64,12 +77,14 @@ void AssetManager::update_assets()
 void AssetManager::save_cache()
 {
     std::ofstream data;
+    std::string line;
     data.open("../temp/cache.txt");
     for (size_t idx = 0; idx < assets.size(); idx++)
     {
         std::string name = assets[idx]->getCurrency();
         std::string rate = std::to_string(assets[idx]->getRate());
         std::string comb = name + " " + rate + "\n";
+
         data << comb;
     }
 }
@@ -79,6 +94,7 @@ void AssetManager::read_cache()
     std::string name;
     std::string rate;
     std::string line;
+
     std::ifstream cache("../temp/cache.txt");
     if (cache.is_open())
     {

@@ -17,6 +17,8 @@ struct Run
 {
     static void run()
     {
+        std::string asset_type;
+        std::string new_asset;
         auto now = std::chrono::system_clock::now();
         [[maybe_unused]]auto timer = now + std::chrono::seconds(10);
         int ch; // To store keystrokes
@@ -28,6 +30,7 @@ struct Run
         AssetManager a_manager;
         auto win = window.get_win();
 
+        //a_manager.populate_assets();
         for (size_t i = 0; i < a_manager.raw_info.size(); i++)
         {
             wmove(win,i+1,1);
@@ -95,8 +98,8 @@ struct Run
                         a_manager.save_cache();
                         getyx(win, window.c_y, window.c_x);
 
-                        std::string asset_type = Input::getString(window);
-                        std::string new_asset = Input::getString(window);
+                        asset_type = Input::getString(window);
+                        new_asset = Input::getString(window);
                         
                         AssetType type;
                         (asset_type == "crypto") ? type = CRYPTO : type = STOCK;
@@ -104,6 +107,10 @@ struct Run
 
                         refresh_window(win, a_manager);
                         r_HorizontalPosition(win, window.c_y, window.c_x, COLS-2, DEFAULT, CURRENT_ROW);
+                        break;
+                    
+                    case 98:
+                        a_manager.populate_assets();
                         break;
 
                     //case 10: // KEY_ENTER refers to numpad enter. ASCII 10 is "normal" enter

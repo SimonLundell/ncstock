@@ -26,6 +26,7 @@ class Asset
         Asset(AssetType type, const std::string &currency);
 
         // Member functions
+        void establishSession();
         void queryExchangeRate();
         void callAPI();
 

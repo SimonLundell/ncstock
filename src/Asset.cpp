@@ -9,6 +9,11 @@ Asset::Asset(AssetType type, const std::string &currency) :
     queryExchangeRate();
 }
 
+void Asset::establishSession()
+{
+
+}
+
 void Asset::queryExchangeRate()
 {
     switch(_type)
