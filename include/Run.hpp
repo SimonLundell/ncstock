@@ -10,6 +10,7 @@
 #include "../include/UserInput.hpp"
 #include "../include/Asset.hpp"
 #include "../include/AssetManager.hpp"
+#include "../include/Keyboard.hpp"
 
 int ROWS, COLS;
 
@@ -85,7 +86,7 @@ struct Run
                         HorizontalPosition(win, window.c_y, window.c_x, COLS-2, DEFAULT, CURRENT_ROW, false);
                         break;
                     
-                    case 330: // Delete
+                    case KEY::del : // Delete
                         getyx(win, window.c_y, window.c_x);
                         a_manager.remove_asset(window.c_y);
 
@@ -94,8 +95,7 @@ struct Run
 
                         break;
 
-                    case 97:
-                        a_manager.save_cache();
+                    case KEY::a : // a
                         getyx(win, window.c_y, window.c_x);
 
                         asset_type = Input::getString(window);
@@ -105,12 +105,18 @@ struct Run
                         (asset_type == "crypto") ? type = CRYPTO : type = STOCK;
                         a_manager.add_asset(type, new_asset);
 
+                        break;
+                    
+                    case KEY::b : // b
+                        getyx(win, window.c_y, window.c_x);
+                        a_manager.populate_assets();
                         refresh_window(win, a_manager);
                         r_HorizontalPosition(win, window.c_y, window.c_x, COLS-2, DEFAULT, CURRENT_ROW);
                         break;
-                    
-                    case 98:
-                        a_manager.populate_assets();
+
+                    case KEY::c : // c
+                        refresh_window(win, a_manager);
+                        r_HorizontalPosition(win, window.c_y, window.c_x, COLS-2, DEFAULT, CURRENT_ROW);
                         break;
 
                     //case 10: // KEY_ENTER refers to numpad enter. ASCII 10 is "normal" enter

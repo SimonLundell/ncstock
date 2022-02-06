@@ -16,8 +16,6 @@ void AssetManager::populate_assets()
     this->add_asset(AssetType::STOCK, "NVDA");
     this->add_asset(AssetType::STOCK, "SQ");
     this->add_asset(AssetType::STOCK, "AMD");
-
-    save_cache();
 }
 
 void AssetManager::add_asset(AssetType type, const std::string& name)
@@ -35,6 +33,8 @@ void AssetManager::add_asset(AssetType type, const std::string& name)
     {
         return ass1->getCurrency() < ass2->getCurrency();
     });
+
+    save_cache();
 }
 
 std::shared_ptr<Asset> AssetManager::get_asset(const std::string& name)
@@ -89,6 +89,7 @@ void AssetManager::save_cache()
     }
 }
 
+// TODO: DOESNT READ THE ASSET ON NEW START OF PROGRAM
 void AssetManager::read_cache()
 {
     std::string name;
