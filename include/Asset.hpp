@@ -33,6 +33,7 @@ class Asset
         // Getters, without new API call
         std::string getCurrency() const;
         float getRate() const;
+        AssetType getType() const;
 
     private:
         const std::string _assetName;

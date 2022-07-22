@@ -94,3 +94,8 @@ float Asset::getRate() const
 {
     return _rate;
 }
+
+AssetType Asset::getType() const
+{
+    return _type;
+}

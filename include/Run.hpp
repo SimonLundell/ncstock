@@ -32,10 +32,12 @@ struct Run
         auto win = window.get_win();
 
         //a_manager.populate_assets();
-        for (size_t i = 0; i < a_manager.raw_info.size(); i++)
+        auto raw_info = a_manager.get_raw_info();
+
+        for (size_t i = 0; i < raw_info.size(); i++)
         {
             wmove(win,i+1,1);
-            wprintw(win, a_manager.raw_info[i]);
+            wprintw(win, raw_info[i]);
         }
         
 
@@ -115,6 +117,7 @@ struct Run
                         break;
 
                     case KEY::c : // c
+                        a_manager.save_cache();
                         refresh_window(win, a_manager);
                         r_HorizontalPosition(win, window.c_y, window.c_x, COLS-2, DEFAULT, CURRENT_ROW);
                         break;

@@ -70,8 +70,9 @@ void r_HorizontalPosition(WINDOW* win, int &y, int &x, const int &size, const in
 void refresh_window(WINDOW* win, AssetManager& a_manager)
 {
     wclear(win);
+    auto assets = a_manager.get_assets();
 
-    for (size_t i = 0; i < a_manager.assets.size(); i++)
+    for (size_t i = 0; i < assets.size(); i++)
     {
         wmove(win,i+1,1);
         wprintw(win, a_manager.print_asset_info(i));
