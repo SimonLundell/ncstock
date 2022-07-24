@@ -138,7 +138,6 @@ struct Run
                                 c_x++;
                                 
                                 wmove(stdscr, c_y, c_x);
-                                wrefresh(stdscr);
                                 while (n != '\n')
                                 {
                                     msg.push_back(n); /* Push back character from getch() to msg while it is not newline */ 
@@ -151,7 +150,13 @@ struct Run
                                 AssetType type;
                                 (asset_type == "Crypto") ? type = CRYPTO : type = STOCK;
                                 a_manager.add_asset(type, msg);
+                                for (unsigned int j = 0; j < msg.size()+2; j++)
+                                    mvwdelch(stdscr, c_y, c_x-j);
+                                wattroff(stdscr, A_REVERSE);
+                                mvwprintw(stdscr, highlight, COLS-(window.get_asset_options(0).size()+8), window.get_asset_options(highlight).c_str());
+                                wrefresh(stdscr);
                                 refresh_window(win, a_manager);
+                                r_HorizontalPosition(win, window.c_y, window.c_x, COLS-3, DEFAULT, CURRENT_ROW);
                                 break;
                             }
                         }
