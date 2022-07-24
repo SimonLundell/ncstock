@@ -32,8 +32,7 @@ else()
     message(STATUS "Found ${mypoconetssl}")
 endif()
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -lncurses -lPocoNet -lPocoFoundation -lPocoNetSSL")
-
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -lncurses -lPocoNet -lPocoFoundation -lPocoNetSSL -pthread")
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 file(GLOB srcs src/*.cpp)

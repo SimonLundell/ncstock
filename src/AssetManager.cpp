@@ -56,6 +56,11 @@ std::vector<char*> AssetManager::get_raw_info() const
     return _raw_info;
 }
 
+std::vector<float> AssetManager::get_asset_rates() const
+{
+    return _asset_rates;
+}
+
 void AssetManager::remove_asset(const int& row)
 {
     _assets.erase(_assets.begin()+row-1);
@@ -76,9 +81,18 @@ const char* AssetManager::print_asset_info(const size_t& idx)
 // Should update the rate of all assets in the list
 void AssetManager::update_assets()
 {
+    this->save_rates();
     for (const auto& asset : _assets)
     {
         asset->queryExchangeRate();
+    }
+}
+
+void AssetManager::save_rates()
+{
+    for (const auto& asset : _assets)
+    {
+        _asset_rates.push_back(asset->getRate());
     }
 }
 

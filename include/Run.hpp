@@ -1,7 +1,7 @@
-
 #include <iostream>
 #include <memory>
 #include <chrono>
+#include <future>
 
 #include <ncurses.h>
 #include <curses.h>
@@ -20,9 +20,10 @@ struct Run
     {
         std::string asset_type;
         std::string new_asset;
-        auto now = std::chrono::system_clock::now();
-        [[maybe_unused]]auto timer = now + std::chrono::seconds(10);
         int ch; // To store keystrokes
+
+        int choice;
+        int highlight = 0;
 
         // Initialize window with border
         Window window(WindowType::MAIN);
@@ -40,34 +41,20 @@ struct Run
             wprintw(win, raw_info[i]);
         }
         
-
-        //for (int i = 0; i < assets.size(); i++)
-        //{
-        //    wmove(win,i+1,1);
-        //    whitespace = assets[i]->getCurrency() + " " + std::to_string(assets[i]->getExchangeRate()) + "\n";
-        //    //wattron(win, COLOR_PAIR(UPTREND));
-        //    //waddch(win,ACS_UARROW);
-        //    //wattron(win, COLOR_PAIR(DOWNTREND));
-        //    //waddch(win, ACS_DARROW);
-        //    wprintw(win,whitespace.c_str());
-        //}
-        
         wborder(win, 0, 0, 0, 0, 0, 0, 0, 0); // Draw border again to avoid edge disappear due to loop
         wmove(win, window.c_y, window.c_x);
-        mvwchgat(win, window.c_y, window.c_x, COLS-2, WA_HORIZONTAL, CURRENT_ROW, NULL);
+        mvwchgat(win, window.c_y, window.c_x, COLS-3, WA_HORIZONTAL, CURRENT_ROW, NULL);
 
         wrefresh(win);
 
+        auto now = std::chrono::system_clock::now();
+        [[maybe_unused]]auto timer = now + std::chrono::seconds(10);
+
         while (true)
         {
-            /*now = std::chrono::system_clock::now();
-            if (now > timer)
-            {
-                a_manager.update_assets();
-                timer = now + std::chrono::seconds(10);
-            }
-            */
-            if ((ch = getch()) != ERR)
+            // now = std::chrono::system_clock::now();
+            
+            if ((ch = getch()) != ERR && now < timer)
             {
                 switch (ch)
                 {
@@ -81,19 +68,20 @@ struct Run
                         break;
                     
                     case KEY_UP:
-                        HorizontalPosition(win, window.c_y, window.c_x, COLS-2, DEFAULT, CURRENT_ROW, true);
+                        HorizontalPosition(win, window.c_y, window.c_x, COLS-3, DEFAULT, CURRENT_ROW, true);
                         break;
                     
                     case KEY_DOWN:
-                        HorizontalPosition(win, window.c_y, window.c_x, COLS-2, DEFAULT, CURRENT_ROW, false);
+                        HorizontalPosition(win, window.c_y, window.c_x, COLS-3, DEFAULT, CURRENT_ROW, false);
                         break;
                     
                     case KEY::del : // Delete
                         getyx(win, window.c_y, window.c_x);
                         a_manager.remove_asset(window.c_y);
 
+                        // wrefresh(win);
                         refresh_window(win, a_manager);
-                        r_HorizontalPosition(win, window.c_y, window.c_x, COLS-2, DEFAULT, CURRENT_ROW);
+                        r_HorizontalPosition(win, window.c_y, window.c_x, COLS-3, DEFAULT, CURRENT_ROW);
 
                         break;
 
@@ -110,16 +98,69 @@ struct Run
                         break;
                     
                     case KEY::b : // b
-                        getyx(win, window.c_y, window.c_x);
-                        a_manager.populate_assets();
-                        refresh_window(win, a_manager);
-                        r_HorizontalPosition(win, window.c_y, window.c_x, COLS-2, DEFAULT, CURRENT_ROW);
+                        while(true)
+                        {
+                            for (int i = 0; i < 2; i++)
+                            {
+                                if (i == highlight)
+                                    wattron(stdscr, A_REVERSE);
+                                mvwprintw(stdscr, i, COLS-(window.get_asset_options(0).size()+8), window.get_asset_options(i).c_str());
+                                wattroff(stdscr, A_REVERSE);
+                            }
+                            choice = wgetch(stdscr);
+
+                            switch(choice)
+                            {
+                                case KEY_UP:
+                                    highlight--;
+                                    if (highlight == -1)
+                                        highlight = 0;
+                                    break;
+                                case KEY_DOWN:
+                                    highlight++;
+                                    if (highlight == 2)
+                                        highlight = 1;
+                                    break;
+                                default:
+                                    break;
+                            }
+                            if (choice == 10)
+                            {
+                                std::string asset_type = window.get_asset_options(highlight);
+                                std::string msg;
+                                wmove(stdscr, highlight, COLS-(window.get_asset_options(highlight).size()+1));
+                                int c_y, c_x;
+                                
+                                getyx(stdscr, c_y, c_x);
+
+                                int n = getch();
+                                mvwaddch(stdscr, c_y, c_x, n);
+                                c_x++;
+                                
+                                wmove(stdscr, c_y, c_x);
+                                wrefresh(stdscr);
+                                while (n != '\n')
+                                {
+                                    msg.push_back(n); /* Push back character from getch() to msg while it is not newline */ 
+                                    n = getch();
+                                    mvwaddch(stdscr, c_y, c_x, n);
+                                    c_x++;
+                                    wmove(stdscr, c_y, c_x);
+                                    wrefresh(stdscr);
+                                }
+                                AssetType type;
+                                (asset_type == "Crypto") ? type = CRYPTO : type = STOCK;
+                                a_manager.add_asset(type, msg);
+                                refresh_window(win, a_manager);
+                                break;
+                            }
+                        }
                         break;
 
                     case KEY::c : // c
                         a_manager.save_cache();
-                        refresh_window(win, a_manager);
-                        r_HorizontalPosition(win, window.c_y, window.c_x, COLS-2, DEFAULT, CURRENT_ROW);
+                        refresh_window_and_update(win, a_manager);
+                        r_HorizontalPosition(win, window.c_y, window.c_x, COLS-3, DEFAULT, CURRENT_ROW);
                         break;
 
                     //case 10: // KEY_ENTER refers to numpad enter. ASCII 10 is "normal" enter
@@ -128,6 +169,14 @@ struct Run
                     //case 23: // KEY_ESCAPE
                     //    break;
                 }
+            }
+            else if (now > timer)
+            {
+                a_manager.save_cache();
+                refresh_window(win, a_manager);
+                r_HorizontalPosition(win, window.c_y, window.c_x, COLS-3, DEFAULT, CURRENT_ROW);
+
+                timer = now + std::chrono::seconds(10);
             }
             wrefresh(win);
         }

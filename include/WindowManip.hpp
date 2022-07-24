@@ -2,6 +2,7 @@
 #define WINDOW_MANIP_H
 #include <ncurses.h>
 #include <curses.h>
+#include <future>
 
 #include "AssetManager.hpp"
 #include "Window.hpp"
@@ -19,6 +20,9 @@ void HorizontalPosition(WINDOW* win, int &y, int &x, const int &size, const int 
 
 void r_HorizontalPosition(WINDOW* win, int &y, int &x, const int &size, const int &NOHL, const int& HL);
 
+void refresh_window_and_update(WINDOW* win, AssetManager& a_manager);
+
 void refresh_window(WINDOW* win, AssetManager& a_manager);
+
 
 #endif

@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <iostream>
 #include <memory>
+#include <future>
 #include <Poco/Net/HTTPRequest.h>
 #include <Poco/Net/HTTPResponse.h>
 #include <Poco/Net/HTTPSClientSession.h>

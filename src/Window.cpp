@@ -13,7 +13,9 @@ Window::Window(WindowType type)
     
     /* stdscr inits */
     getmaxyx(stdscr, ROWS, COLS); /* get size of stdscr (terminal) and return to ROWS, COLS */
-    mvwprintw(stdscr, 0, 0, "Add asset: \"a\": type -> name");
+    mvwprintw(stdscr, 0, 0, _infotxt.c_str());
+    mvwprintw(stdscr, 0, COLS-(get_asset_options(0).size()+8), get_asset_options(0).c_str());
+    mvwprintw(stdscr, 1, COLS-(get_asset_options(0).size()+8), get_asset_options(1).c_str());
     wrefresh(stdscr);
 
     if (has_colors() == FALSE) 
@@ -34,7 +36,7 @@ Window::Window(WindowType type)
     keypad(stdscr, TRUE); /* Enable keypad input (F-keys, arrows etc.) */
 
     /* Main Window creation */
-    _win = create_window_wBorder(ROWS-1, COLS, 1, 0);
+    _win = create_window_wBorder(ROWS-2, COLS, 2, 0);
 
     curs_set(0); // Hide cursor
 }

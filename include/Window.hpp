@@ -8,7 +8,6 @@
 #include <ncurses.h>
 #include <curses.h>
 
-#include <Asset.hpp>
 #include <WindowManip.hpp>
 
 #define DEFAULT 1
@@ -29,12 +28,17 @@ class Window
     public:
         Window(WindowType type);
         WINDOW* get_win();
+        std::string get_asset_options(const int& idx) { return _asset_option[idx]; };
 
         int c_x = 1;
         int c_y = 1;
     private:
         WindowType _type;
         WINDOW* _win;
+
+        std::string _infotxt = "Add asset: \"a\"";
+        std::string _asset_option[2] = {"Crypto", "Stock"};
+
 };
 
 
