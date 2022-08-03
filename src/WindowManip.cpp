@@ -106,6 +106,11 @@ void refresh_window_and_update(WINDOW* win, AssetManager& a_manager)
     wborder(win, 0, 0, 0, 0, 0, 0, 0, 0); // after loop to avoid edge disappear
 }
 
+void refresh_stdscr()
+{
+
+}
+
 void refresh_window(WINDOW* win, AssetManager& a_manager)
 {
     [[maybe_unused]]int max_y;

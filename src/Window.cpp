@@ -14,8 +14,8 @@ Window::Window(WindowType type)
     /* stdscr inits */
     getmaxyx(stdscr, ROWS, COLS); /* get size of stdscr (terminal) and return to ROWS, COLS */
     mvwprintw(stdscr, 0, 0, _infotxt.c_str());
-    mvwprintw(stdscr, 0, COLS-(get_asset_options(0).size()+8), get_asset_options(0).c_str());
-    mvwprintw(stdscr, 1, COLS-(get_asset_options(0).size()+8), get_asset_options(1).c_str());
+    mvwprintw(stdscr, 0, _infotxt.size()+2, _asset_option[0].c_str());
+    mvwprintw(stdscr, 1, _infotxt.size()+2, _asset_option[1].c_str());
     wrefresh(stdscr);
 
     if (has_colors() == FALSE) 

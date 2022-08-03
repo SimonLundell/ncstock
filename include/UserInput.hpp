@@ -16,7 +16,9 @@ namespace Input
 
     int hashtable(const std::string &inp);
 
-    std::string getString(Window& window);
+    std::string getString(Window &window);
+
+    void highlight_choice(Window &window, int &highlight, int &choice);
 } // Input
 
 #endif

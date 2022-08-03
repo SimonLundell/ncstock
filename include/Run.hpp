@@ -68,24 +68,35 @@ struct Run
                         break;
                     
                     case KEY_UP:
-                        HorizontalPosition(win, window.c_y, window.c_x, COLS-3, DEFAULT, CURRENT_ROW, true);
+                        if (window.c_y > 1)
+                        {
+                            HorizontalPosition(win, window.c_y, window.c_x, COLS-3, DEFAULT, CURRENT_ROW, true);
+                        }
                         break;
                     
                     case KEY_DOWN:
-                        HorizontalPosition(win, window.c_y, window.c_x, COLS-3, DEFAULT, CURRENT_ROW, false);
+                        if (static_cast<unsigned int>(window.c_y) < a_manager.get_assets().size())
+                        {
+                            HorizontalPosition(win, window.c_y, window.c_x, COLS-3, DEFAULT, CURRENT_ROW, false);
+                        }
                         break;
                     
-                    case KEY::del : // Delete
+                    case KEY::del: // Delete
                         getyx(win, window.c_y, window.c_x);
                         a_manager.remove_asset(window.c_y);
-
-                        // wrefresh(win);
+                        // Have to refresh after removing an asset
                         refresh_window(win, a_manager);
-                        r_HorizontalPosition(win, window.c_y, window.c_x, COLS-3, DEFAULT, CURRENT_ROW);
 
+                        r_HorizontalPosition(win, window.c_y, window.c_x, COLS-3, DEFAULT, CURRENT_ROW);
+                        
+                        // Move position up if last row deleted
+                        if (window.c_y >= a_manager.get_assets().size())
+                        {
+                            HorizontalPosition(win, window.c_y, window.c_x, COLS-3, DEFAULT, CURRENT_ROW, true);
+                        }
                         break;
 
-                    case KEY::a : // a
+                    case KEY::z:
                         getyx(win, window.c_y, window.c_x);
 
                         asset_type = Input::getString(window);
@@ -97,38 +108,15 @@ struct Run
 
                         break;
                     
-                    case KEY::b : // b
+                    case KEY::a: 
                         while(true)
                         {
-                            for (int i = 0; i < 2; i++)
-                            {
-                                if (i == highlight)
-                                    wattron(stdscr, A_REVERSE);
-                                mvwprintw(stdscr, i, COLS-(window.get_asset_options(0).size()+8), window.get_asset_options(i).c_str());
-                                wattroff(stdscr, A_REVERSE);
-                            }
-                            choice = wgetch(stdscr);
-
-                            switch(choice)
-                            {
-                                case KEY_UP:
-                                    highlight--;
-                                    if (highlight == -1)
-                                        highlight = 0;
-                                    break;
-                                case KEY_DOWN:
-                                    highlight++;
-                                    if (highlight == 2)
-                                        highlight = 1;
-                                    break;
-                                default:
-                                    break;
-                            }
-                            if (choice == 10)
+                            Input::highlight_choice(window, highlight, choice);
+                            if (choice == KEY::enter)
                             {
                                 std::string asset_type = window.get_asset_options(highlight);
                                 std::string msg;
-                                wmove(stdscr, highlight, COLS-(window.get_asset_options(highlight).size()+1));
+                                wmove(stdscr, highlight, window.get_infotxt_size() + 2 + window.get_asset_options(highlight).size()+1);
                                 int c_y, c_x;
                                 
                                 getyx(stdscr, c_y, c_x);
@@ -138,7 +126,7 @@ struct Run
                                 c_x++;
                                 
                                 wmove(stdscr, c_y, c_x);
-                                while (n != '\n')
+                                while (n != KEY::enter)
                                 {
                                     msg.push_back(n); /* Push back character from getch() to msg while it is not newline */ 
                                     n = getch();
@@ -153,7 +141,7 @@ struct Run
                                 for (unsigned int j = 0; j < msg.size()+2; j++)
                                     mvwdelch(stdscr, c_y, c_x-j);
                                 wattroff(stdscr, A_REVERSE);
-                                mvwprintw(stdscr, highlight, COLS-(window.get_asset_options(0).size()+8), window.get_asset_options(highlight).c_str());
+                                mvwprintw(stdscr, highlight, window.get_infotxt_size()+2, window.get_asset_options(highlight).c_str());
                                 wrefresh(stdscr);
                                 refresh_window(win, a_manager);
                                 r_HorizontalPosition(win, window.c_y, window.c_x, COLS-3, DEFAULT, CURRENT_ROW);

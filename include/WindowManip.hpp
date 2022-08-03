@@ -22,6 +22,8 @@ void r_HorizontalPosition(WINDOW* win, int &y, int &x, const int &size, const in
 
 void refresh_window_and_update(WINDOW* win, AssetManager& a_manager);
 
+void refresh_stdscr();
+
 void refresh_window(WINDOW* win, AssetManager& a_manager);
 
 

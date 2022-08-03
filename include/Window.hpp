@@ -29,6 +29,7 @@ class Window
         Window(WindowType type);
         WINDOW* get_win();
         std::string get_asset_options(const int& idx) { return _asset_option[idx]; };
+        size_t get_infotxt_size() { return _infotxt.size(); };
 
         int c_x = 1;
         int c_y = 1;
@@ -38,6 +39,7 @@ class Window
 
         std::string _infotxt = "Add asset: \"a\"";
         std::string _asset_option[2] = {"Crypto", "Stock"};
+        const int _asset_text_buffer = _asset_option[0].size() + 8;
 
 };
 

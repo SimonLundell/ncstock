@@ -27,5 +27,6 @@ enum KEY
     z = 0x79,
 
     // Util keys
-    del = 0x14A
+    del = 0x14A,
+    enter = 0xA
 };
