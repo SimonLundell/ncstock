@@ -27,14 +27,23 @@ enum WindowType
 class Window
 {
     public:
+        // Constructor
         Window(WindowType type);
+
+        // Init
         void init_text();
+
+        // Getters
         WINDOW* get_win();
         std::string get_asset_options(const int& idx) { return _asset_option[idx]; };
         size_t get_infotxt_size() { return _infotxt.size(); };
-        void add_column_texts(const std::string text);
+        std::vector<size_t> get_text_buffer_tracker() const;
+        
+        // Modifiers
         void remove_column_text(const int index);
+        void add_column_texts(const std::string text);
 
+        // Make private with getters and setters?
         int c_x = 1;
         int c_y = 1;
     private:
@@ -46,8 +55,9 @@ class Window
         const int _asset_text_buffer = _asset_option[0].size() + 8;
 
         int _offset;
-        size_t _buffer;
+        size_t _text_buffer;
         std::vector<std::string> _column_texts;
+        std::vector<size_t> _text_buffer_tracker;
 };
 
 

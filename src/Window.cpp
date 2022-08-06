@@ -2,8 +2,9 @@
 
 Window::Window(WindowType type) : 
     _offset(3), 
-    _buffer(0), 
-    _column_texts({"Asset", "Latest SEK USD", "Market cap MSEK", "P/E", "Trend"})
+    _text_buffer(0), 
+    _column_texts({"Asset", "Latest", "Market cap MIL", "Currency","P/E", "Trend"}),
+    _text_buffer_tracker(std::vector<size_t>(_column_texts.size(), 0))
 {
     if (type == WindowType::MAIN)
     {
@@ -52,18 +53,26 @@ Window::Window(WindowType type) :
 
 void Window::init_text()
 {
-    mvwprintw(stdscr, 0, 0, _infotxt.c_str());
-    mvwprintw(stdscr, 0, _infotxt.size()+2, _asset_option[0].c_str());
-    mvwprintw(stdscr, 1, _infotxt.size()+2, _asset_option[1].c_str());
-    mvwprintw(stdscr, 2, 0, _column_texts[0].c_str());
-
+    size_t r_offset = 1;
+    _text_buffer += r_offset;
+    _text_buffer_tracker[0] = r_offset;
     const size_t increment = std::round(COLS / _column_texts.size());
-    _buffer += increment;
+
+    mvwprintw(stdscr, 0, r_offset, _infotxt.c_str());
+    mvwprintw(stdscr, 0, _infotxt.size()+r_offset+2, _asset_option[0].c_str());
+    mvwprintw(stdscr, 1, _infotxt.size()+r_offset+2, _asset_option[1].c_str());
+    mvwprintw(stdscr, 2, r_offset, _column_texts[0].c_str());
 
     for (size_t i = 1; i < _column_texts.size(); i++)
     {
-        _buffer += increment;
-        mvwprintw(stdscr, 2, _buffer - _column_texts[i].size(), _column_texts[i].c_str());
+        _text_buffer += increment;
+        if (i == _column_texts.size() - 1)
+        {
+            _text_buffer = COLS;
+        }
+        const int text_x_pos = _text_buffer - _column_texts[i].size() - r_offset;
+        mvwprintw(stdscr, 2, text_x_pos, _column_texts[i].c_str());
+        _text_buffer_tracker[i] = text_x_pos; 
     }
 }
 
@@ -80,4 +89,9 @@ void Window::add_column_texts(const std::string text)
 void Window::remove_column_text(const int index)
 {
     _column_texts.erase(_column_texts.begin() + index);
+}
+
+std::vector<size_t> Window::get_text_buffer_tracker() const
+{
+    return _text_buffer_tracker;
 }
