@@ -90,7 +90,7 @@ struct Run
                         r_HorizontalPosition(win, window.c_y, window.c_x, COLS-3, DEFAULT, CURRENT_ROW);
                         
                         // Move position up if last row deleted
-                        if (window.c_y >= a_manager.get_assets().size())
+                        if (window.c_y >= static_cast<int>(a_manager.get_assets().size()))
                         {
                             HorizontalPosition(win, window.c_y, window.c_x, COLS-3, DEFAULT, CURRENT_ROW, true);
                         }

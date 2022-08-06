@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <memory>
+#include <cmath>
 
 #include <ncurses.h>
 #include <curses.h>
@@ -27,9 +28,12 @@ class Window
 {
     public:
         Window(WindowType type);
+        void init_text();
         WINDOW* get_win();
         std::string get_asset_options(const int& idx) { return _asset_option[idx]; };
         size_t get_infotxt_size() { return _infotxt.size(); };
+        void add_column_texts(const std::string text);
+        void remove_column_text(const int index);
 
         int c_x = 1;
         int c_y = 1;
@@ -37,10 +41,13 @@ class Window
         WindowType _type;
         WINDOW* _win;
 
-        std::string _infotxt = "Add asset: \"a\"";
+        std::string _infotxt = "Add asset (a): ";
         std::string _asset_option[2] = {"Crypto", "Stock"};
         const int _asset_text_buffer = _asset_option[0].size() + 8;
 
+        int _offset;
+        size_t _buffer;
+        std::vector<std::string> _column_texts;
 };
 
 
