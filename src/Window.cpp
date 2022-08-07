@@ -3,7 +3,7 @@
 Window::Window(WindowType type) : 
     _offset(3), 
     _text_buffer(0), 
-    _column_texts({"Asset", "Latest", "Market cap MIL", "Currency","P/E", "Trend"}),
+    _column_texts({"Name", "Short", "Latest", "Market cap MIL", "Currency", "P/E", "Updated", "Trend"}),
     _text_buffer_tracker(std::vector<size_t>(_column_texts.size(), 0))
 {
     if (type == WindowType::MAIN)
@@ -61,6 +61,9 @@ void Window::init_text()
     mvwprintw(stdscr, 0, r_offset, _infotxt.c_str());
     mvwprintw(stdscr, 0, _infotxt.size()+r_offset+2, _asset_option[0].c_str());
     mvwprintw(stdscr, 1, _infotxt.size()+r_offset+2, _asset_option[1].c_str());
+    
+    /* TODO: Better alignment of the columns, maybe constant increment between end of column? */
+    wattron(stdscr, WA_BOLD);
     mvwprintw(stdscr, 2, r_offset, _column_texts[0].c_str());
 
     for (size_t i = 1; i < _column_texts.size(); i++)
@@ -74,6 +77,7 @@ void Window::init_text()
         mvwprintw(stdscr, 2, text_x_pos, _column_texts[i].c_str());
         _text_buffer_tracker[i] = text_x_pos; 
     }
+    wattroff(stdscr, WA_BOLD);
 }
 
 WINDOW* Window::get_win()
