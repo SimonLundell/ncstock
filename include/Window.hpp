@@ -28,6 +28,7 @@ class Window
 {
     public:
         // Constructor
+        Window() = default;
         Window(WindowType type);
 
         // Init

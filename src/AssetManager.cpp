@@ -2,20 +2,12 @@
 
 AssetManager::AssetManager()
 {
-    this->read_cache();
+    // this->read_cache();
 }
 
 void AssetManager::populate_assets()
 {
-    this->add_asset(AssetType::CRYPTO, "BTC");
-    this->add_asset(AssetType::STOCK, "IBM");
-    this->add_asset(AssetType::STOCK, "BABA");
-    this->add_asset(AssetType::STOCK, "YELP");
-    this->add_asset(AssetType::STOCK, "ABB");
-    this->add_asset(AssetType::STOCK, "NIO");
-    this->add_asset(AssetType::STOCK, "NVDA");
-    this->add_asset(AssetType::STOCK, "SQ");
-    this->add_asset(AssetType::STOCK, "AMD");
+    return;
 }
 
 void AssetManager::add_asset(AssetType type, const std::string& name)
@@ -39,7 +31,8 @@ std::shared_ptr<Asset> AssetManager::get_asset(const std::string& name)
 {
     for (const auto& asset : _assets)
     {
-        if (asset->getCurrency() == name) return asset;
+        if (asset->getCurrency() == name) 
+            return asset;
     }
     std::cout << "Couldn't find any asset with that name\n";
     
@@ -51,12 +44,12 @@ std::vector<std::shared_ptr<Asset>> AssetManager::get_assets() const
     return _assets;
 }
 
-std::vector<char*> AssetManager::get_raw_info() const
+std::vector<std::string> AssetManager::get_raw_info() const
 {
     return _raw_info;
 }
 
-std::vector<float> AssetManager::get_asset_rates() const
+std::vector<std::string> AssetManager::get_asset_rates() const
 {
     return _asset_rates;
 }
@@ -69,7 +62,7 @@ void AssetManager::remove_asset(const int& row)
 const char* AssetManager::print_asset_info(const size_t& idx)
 {
     std::string name = _assets[idx]->getCurrency();
-    std::string rate = std::to_string(_assets[idx]->getRate());
+    std::string rate = _assets[idx]->getCloseRate();
     std::string comb = name + " " + rate + "\n";
 
     char* output = (char*)calloc(name.size()+rate.size(),sizeof(char)); // Avoid messed up characters in print
@@ -92,7 +85,7 @@ void AssetManager::save_rates()
 {
     for (const auto& asset : _assets)
     {
-        _asset_rates.push_back(asset->getRate());
+        _asset_rates.push_back(asset->getCloseRate());
     }
 }
 
@@ -118,7 +111,7 @@ void AssetManager::save_cache()
     for (const auto& asset : _assets)
     {
         asset_name = asset->getCurrency();
-        rate = std::to_string(asset->getRate());
+        rate = asset->getCloseRate();
         asset_type = asset->getType();
 
         (asset_type == AssetType::CRYPTO) ? type = "CRYPTO" : type = "STOCK";
@@ -149,9 +142,9 @@ void AssetManager::read_cache()
             while (ss >> type >> name >> rate)
             {
                 std::string comb = name + " " + rate;
-                char* output = (char*)calloc(name.size()+rate.size(),sizeof(char)); // Avoid messed up characters in print
-                strcpy(output,comb.c_str());
-                _raw_info.push_back(output);
+                // char* output = (char*)calloc(name.size()+rate.size(),sizeof(char)); // Avoid messed up characters in print
+                // strcpy(output,comb.c_str());
+                _raw_info.push_back(comb);
                 (type == "CRYPTO") ? t = AssetType::CRYPTO : t = AssetType::STOCK;
                 add_asset(t, name);
             }

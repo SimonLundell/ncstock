@@ -45,7 +45,7 @@ namespace Input
         {
             if (i == highlight)
                 wattron(stdscr, A_REVERSE);
-            mvwprintw(stdscr, i, window.get_infotxt_size()+2, window.get_asset_options(i).c_str());
+            mvwprintw(stdscr, i, window.get_infotxt_size()+3, window.get_asset_options(i).c_str());
             wattroff(stdscr, A_REVERSE);
         }
         choice = wgetch(stdscr);

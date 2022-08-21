@@ -16,8 +16,8 @@ class AssetManager
 
         std::shared_ptr<Asset> get_asset(const std::string& name);
         std::vector<std::shared_ptr<Asset>> get_assets() const;
-        std::vector<char*> get_raw_info() const;
-        std::vector<float> get_asset_rates() const;
+        std::vector<std::string> get_raw_info() const;
+        std::vector<std::string> get_asset_rates() const;
         void populate_assets(); // Not being called, only populated from cache.txt
         void add_asset(AssetType type, const std::string& name);
         void remove_asset(const int& row);
@@ -32,8 +32,8 @@ class AssetManager
 
     private:
         std::vector<std::shared_ptr<Asset>> _assets;
-        std::vector<float> _asset_rates;
-        std::vector<char*> _raw_info;
+        std::vector<std::string> _asset_rates;
+        std::vector<std::string> _raw_info;
 };
 
 #endif

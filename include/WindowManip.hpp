@@ -24,7 +24,7 @@ void refresh_window_and_update(WINDOW* win, AssetManager& a_manager);
 
 void refresh_stdscr();
 
-void refresh_window(WINDOW* win, AssetManager& a_manager);
+void refresh_window(WINDOW* win, AssetManager& a_manager, const std::vector<size_t> text_positions);
 
 
 #endif

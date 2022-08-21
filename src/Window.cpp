@@ -3,7 +3,7 @@
 Window::Window(WindowType type) : 
     _offset(3), 
     _text_buffer(0), 
-    _column_texts({"Name", "Short", "Latest", "Market cap MIL", "Currency", "P/E", "Updated", "Trend"}),
+    _column_texts({"Name", "Open", "Close", "High", "Low", "Currency", "Volume", "Time", "Trend"}),
     _text_buffer_tracker(std::vector<size_t>(_column_texts.size(), 0))
 {
     if (type == WindowType::MAIN)

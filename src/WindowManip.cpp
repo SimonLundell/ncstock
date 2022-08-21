@@ -83,14 +83,14 @@ void refresh_window_and_update(WINDOW* win, AssetManager& a_manager)
     {
         wmove(win,i+1,1);
         wprintw(win, a_manager.print_asset_info(i));
-        if (assets[i]->getRate() > a_manager.get_asset_rates()[i])
+        if (assets[i]->getCloseRate() > a_manager.get_asset_rates()[i])
         {
            wmove(win, i+1, max_x-2);
            wattron(win, COLOR_PAIR(UPTREND));
            waddch(win,ACS_UARROW);
            wattroff(win, COLOR_PAIR(UPTREND));
         }
-        else if (assets[i]->getRate() < a_manager.get_asset_rates()[i])
+        else if (assets[i]->getCloseRate() < a_manager.get_asset_rates()[i])
         {
            wmove(win, i+1, max_x-2);
            wattron(win, COLOR_PAIR(DOWNTREND));
@@ -111,7 +111,7 @@ void refresh_stdscr()
 
 }
 
-void refresh_window(WINDOW* win, AssetManager& a_manager)
+void refresh_window(WINDOW* win, AssetManager& a_manager, const std::vector<size_t> text_positions)
 {
     [[maybe_unused]]int max_y;
     int max_x;
@@ -122,8 +122,39 @@ void refresh_window(WINDOW* win, AssetManager& a_manager)
 
     for (size_t i = 0; i < assets.size(); i++)
     {
-        wmove(win,i+1,1);
-        wprintw(win, a_manager.print_asset_info(i));
+        for (size_t t = 0; t < text_positions.size(); t++)
+        {
+            wmove(win,i+1, text_positions[t]);
+            switch(t)
+            {
+                case 0:
+                    wprintw(win, assets[i]->getAssetName().c_str());
+                    break;
+                case 1:
+                    wprintw(win, assets[i]->getCloseRate().c_str());
+                    break;
+                case 2:
+                    wprintw(win, assets[i]->getOpenRate().c_str());
+                    break;
+                case 3:
+                    wprintw(win, assets[i]->getHighRate().c_str());
+                    break;
+                case 4:
+                    wprintw(win, assets[i]->getLowRate().c_str());
+                    break;
+                case 5:
+                    wprintw(win, assets[i]->getCurrency().c_str());
+                    break;
+                case 6:
+                    wprintw(win, assets[i]->getVolume().c_str());
+                    break;
+                case 7:
+                    wprintw(win, assets[i]->getTime().c_str());
+                    break;
+                default:
+                    break;
+            }
+        }
     }
     wborder(win, 0, 0, 0, 0, 0, 0, 0, 0); // after loop to avoid edge disappear
 }
