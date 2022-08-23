@@ -30,29 +30,30 @@ struct Run
 
         // Asset setup
         AssetManager a_manager;
+        a_manager.read_cache();
         auto win = window.get_win();
 
         //a_manager.populate_assets();
         auto raw_info = a_manager.get_raw_info();
         std::vector<size_t> text_positions = window.get_text_buffer_tracker();
 
-        for (size_t i = 0; i < raw_info.size(); i++)
-        {
-            std::string text = raw_info[i];
-            std::string delimiter = " ";
-            size_t pos = 0;
-            std::string token;
-            int t = 0;
-            while ((pos = text.find(delimiter)) != std::string::npos)
-            {
-                token = text.substr(0, pos);
-                wmove(win, i+1, text_positions[t]);
-                wprintw(win, token.c_str());
-                text.erase(0, pos + delimiter.length());
-                t++;
-            }
-            // wmove(win,i+1,1);
-        }
+        // for (size_t i = 0; i < raw_info.size(); i++)
+        // {
+        //     std::string text = raw_info[i];
+        //     std::string delimiter = " ";
+        //     size_t pos = 0;
+        //     std::string token;
+        //     int t = 0;
+        //     while ((pos = text.find(delimiter)) != std::string::npos)
+        //     {
+        //         token = text.substr(0, pos);
+        //         wmove(win, i+1, text_positions[t]);
+        //         wprintw(win, token.c_str());
+        //         text.erase(0, pos + delimiter.length());
+        //         t++;
+        //     }
+        //     // wmove(win,i+1,1);
+        // }
         
         wborder(win, 0, 0, 0, 0, 0, 0, 0, 0); // Draw border again to avoid edge disappear due to loop
         wmove(win, window.c_y, window.c_x);

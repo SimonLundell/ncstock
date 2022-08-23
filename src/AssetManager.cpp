@@ -128,26 +128,22 @@ void AssetManager::save_cache()
 void AssetManager::read_cache()
 {
     std::string type;
-    std::string name;
-    std::string rate;
-    std::string line;
+    std::string json_obj;
+    std::stringstream buffer;
     AssetType t;
 
-    std::ifstream cache("../temp/cache.txt");
+    std::ifstream cache("../temp/response_dump.json");
     if (cache.is_open())
     {
-        while (getline(cache, line))
-        {
-            std::stringstream ss(line);
-            while (ss >> type >> name >> rate)
-            {
-                std::string comb = name + " " + rate;
-                // char* output = (char*)calloc(name.size()+rate.size(),sizeof(char)); // Avoid messed up characters in print
-                // strcpy(output,comb.c_str());
-                _raw_info.push_back(comb);
-                (type == "CRYPTO") ? t = AssetType::CRYPTO : t = AssetType::STOCK;
-                add_asset(t, name);
-            }
-        }
+        buffer << cache.rdbuf();
+        json_obj = buffer.str();
+        
+        Poco::JSON::Parser parser;
+        Poco::Dynamic::Var result = parser.parse(json_obj);
+        Poco::JSON::Object::Ptr pObject = result.extract<Poco::JSON::Object::Ptr>();
+        Poco::JSON::Object::NameList names = pObject->getNames();
+            // (type == "CRYPTO") ? t = AssetType::CRYPTO : t = AssetType::STOCK;
+            // add_asset(t, name);
+        std::cout << "Hi";
     }
 }

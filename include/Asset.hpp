@@ -4,6 +4,7 @@
 #include <string>
 #include <unordered_map>
 #include <iostream>
+#include <fstream>
 #include <memory>
 #include <future>
 #include <Poco/Net/HTTPRequest.h>
@@ -37,6 +38,7 @@ class Asset
         void queryExchangeRate();
         void callAPI();
         void parseResponse(const std::string& response_string);
+        void cache_dump(const std::string& response_string);
 
         // Getters, without new API call
         std::string getCurrency() const;
@@ -55,6 +57,7 @@ class Asset
         const std::string _apiKey; 
         const std::string _site;
         const AssetType _type;
+        std::shared_ptr<Poco::Net::HTTPSClientSession> _session;
         
         // API response
         std::string _query_time;

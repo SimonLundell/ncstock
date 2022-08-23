@@ -17,7 +17,11 @@ Asset::Asset(AssetType type, const std::string &asset_name) :
 
 void Asset::establishSession()
 {
-    return; // Keep session open somehow?
+    Poco::Net::HTTPResponse res;
+    std::string output;
+
+    _session = std::make_shared<Poco::Net::HTTPSClientSession>(_uri.getHost(),_uri.getPort());
+    // _session = std::move(session);
 }
 
 void Asset::queryExchangeRate()
@@ -39,6 +43,7 @@ void Asset::queryExchangeRate()
     _uri = Poco::URI(_site + _function + _apiKey);
     _path = _uri.getPathAndQuery();
     
+    establishSession();
     callAPI();
 }
 
@@ -47,15 +52,15 @@ void Asset::callAPI()
     Poco::Net::HTTPResponse res;
     std::string output;
 
-    auto _session = Poco::Net::HTTPSClientSession(_uri.getHost(),_uri.getPort());
+    // auto _session = Poco::Net::HTTPSClientSession(_uri.getHost(),_uri.getPort());
 
 
     auto _asset_info = Poco::Net::HTTPRequest(Poco::Net::HTTPRequest::HTTP_GET, 
                                             _path,
                                             Poco::Net::HTTPMessage::HTTP_1_1);
-    _session.sendRequest(_asset_info);
+    _session->sendRequest(_asset_info);
     
-    std::istream &is = _session.receiveResponse(res);
+    std::istream &is = _session->receiveResponse(res);
     if (res.getStatus() == 400)
     {
         std::cerr << "Connection couldn't be resolved, exiting\n";
@@ -65,6 +70,7 @@ void Asset::callAPI()
     std::istringstream ss(output);
 
     parseResponse(output);
+    cache_dump(output);
 }
 
 void Asset::parseResponse(const std::string& response_string)
@@ -101,6 +107,26 @@ void Asset::parseResponse(const std::string& response_string)
 
     if (_close_rate.empty()) 
         _close_rate = "0.0";
+    
+}
+
+void Asset::cache_dump(const std::string& response_string)
+{
+    std::ofstream data;
+    std::string line;
+    std::string type;
+    std::string name = getAssetName();
+
+    (getType() == AssetType::CRYPTO) ? type = "crypto" : type = "stock";
+
+    data.open("../temp/" + type + "_" + name + ".json");
+    if (!data.is_open())
+    {
+        std::cerr << "Failed to open response_dump.json, check your privilegies\n";
+        exit(0);
+    }
+
+    data << response_string;
 }
 
 std::string Asset::getCurrency() const
