@@ -2,11 +2,12 @@
 
 AssetManager::AssetManager()
 {
-    // this->read_cache();
+    _cache = std::make_unique<Cache>("../temp/");
 }
 
 void AssetManager::populate_assets()
 {
+    _cache->get_type_and_name();
     return;
 }
 
@@ -53,6 +54,11 @@ std::vector<std::string> AssetManager::get_asset_rates() const
 {
     return _asset_rates;
 }
+
+void AssetManager::get_temp_data() const
+{
+}
+
 
 void AssetManager::remove_asset(const int& row)
 {

@@ -4,6 +4,7 @@
 #include <memory>
 #include <fstream>
 
+#include <CacheManager.hpp>
 #include <Asset.hpp>
 
 
@@ -18,6 +19,7 @@ class AssetManager
         std::vector<std::shared_ptr<Asset>> get_assets() const;
         std::vector<std::string> get_raw_info() const;
         std::vector<std::string> get_asset_rates() const;
+        void get_temp_data() const;
         void populate_assets(); // Not being called, only populated from cache.txt
         void add_asset(AssetType type, const std::string& name);
         void remove_asset(const int& row);
@@ -26,14 +28,16 @@ class AssetManager
         void save_cache();
         void read_cache();
 
+
         const char* print_asset_info(const size_t& idx);
 
 
 
     private:
-        std::vector<std::shared_ptr<Asset>> _assets;
-        std::vector<std::string> _asset_rates;
-        std::vector<std::string> _raw_info;
+        std::vector<std::shared_ptr<Asset>> _assets{};
+        std::vector<std::string> _asset_rates{};
+        std::vector<std::string> _raw_info{};
+        std::unique_ptr<Cache> _cache{};
 };
 
 #endif
