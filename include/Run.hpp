@@ -30,13 +30,14 @@ struct Run
 
         // Asset setup
         AssetManager a_manager;
-        a_manager.read_cache();
+        // a_manager.read_cache();
         auto win = window.get_win();
 
-        a_manager.populate_assets();
+        // a_manager.populate_assets();
         auto raw_info = a_manager.get_raw_info();
         std::vector<size_t> text_positions = window.get_text_buffer_tracker();
 
+        refresh_window(win, a_manager, text_positions);
         // for (size_t i = 0; i < raw_info.size(); i++)
         // {
         //     std::string text = raw_info[i];

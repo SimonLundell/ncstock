@@ -15,6 +15,21 @@ Asset::Asset(AssetType type, const std::string &asset_name) :
     queryExchangeRate();
 }
 
+Asset::Asset(AssetType type, const std::string &asset_name,  const std::string data) : 
+    _assetName(asset_name),
+    _apiKey("&apikey=3PC87FQ16E7YV46Q"),
+    _site("https://www.alphavantage.co/query?"), 
+    _type(type),
+    _query_time(""),
+    _open_rate(""),
+    _high_rate(""),
+    _low_rate(""),
+    _close_rate(""),
+    _volume("")
+{
+    parseResponse(data);
+}
+
 void Asset::establishSession()
 {
     Poco::Net::HTTPResponse res;

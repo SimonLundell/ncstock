@@ -4,7 +4,7 @@
 #include <memory>
 #include <fstream>
 
-#include <CacheManager.hpp>
+#include <dirent.h>
 #include <Asset.hpp>
 
 
@@ -26,8 +26,7 @@ class AssetManager
         void update_assets();
         void save_rates();
         void save_cache();
-        void read_cache();
-
+        void read_cache(const std::string& directory);
 
         const char* print_asset_info(const size_t& idx);
 
@@ -37,7 +36,6 @@ class AssetManager
         std::vector<std::shared_ptr<Asset>> _assets{};
         std::vector<std::string> _asset_rates{};
         std::vector<std::string> _raw_info{};
-        std::unique_ptr<Cache> _cache{};
 };
 
 #endif

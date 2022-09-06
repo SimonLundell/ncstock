@@ -2,12 +2,11 @@
 
 AssetManager::AssetManager()
 {
-    _cache = std::make_unique<Cache>("../temp/");
+    read_cache("../temp/");
 }
 
 void AssetManager::populate_assets()
 {
-    _cache->get_type_and_name();
     return;
 }
 
@@ -131,25 +130,53 @@ void AssetManager::save_cache()
     }
 }
 
-void AssetManager::read_cache()
+void AssetManager::read_cache(const std::string& directory)
 {
-    std::string type;
-    std::string json_obj;
-    std::stringstream buffer;
-    AssetType t;
-
-    std::ifstream cache("../temp/response_dump.json");
-    if (cache.is_open())
+    DIR* dir;
+    try
     {
-        buffer << cache.rdbuf();
-        json_obj = buffer.str();
+        dir = opendir(directory.c_str());
         
-        Poco::JSON::Parser parser;
-        Poco::Dynamic::Var result = parser.parse(json_obj);
-        Poco::JSON::Object::Ptr pObject = result.extract<Poco::JSON::Object::Ptr>();
-        Poco::JSON::Object::NameList names = pObject->getNames();
-            // (type == "CRYPTO") ? t = AssetType::CRYPTO : t = AssetType::STOCK;
-            // add_asset(t, name);
-        std::cout << "Hi";
+        // If no directory found, write error
+        if (dir == nullptr) 
+        {
+            throw std::invalid_argument("No valid directory given");
+        }
     }
+    catch(const std::invalid_argument& e)
+    {
+        std::cerr << e.what() << '\n';
+        return;
+    }
+
+    struct dirent* file;
+    while ((file = readdir(dir)) != nullptr) 
+    {
+        std::string filename = file->d_name;
+        if (filename == "." || filename == "..")
+        {
+            continue;
+        }
+        AssetType type;
+
+        size_t delimiter = filename.find("_");
+        size_t stop_delimiter = filename.find(".");
+        (filename.substr(0, delimiter)) == "crypto" ? type = AssetType::CRYPTO : type = AssetType::STOCK;
+        std::string name = filename.substr(delimiter+1,(stop_delimiter-delimiter)-1);
+
+        std::stringstream buffer;
+
+        std::ifstream json_cache(directory+filename);
+        std::string json_data;
+        if (json_cache.is_open())
+        {
+            buffer << json_cache.rdbuf();
+            json_data = buffer.str();
+        }
+        _assets.emplace_back(std::make_shared<Asset>(type, name, json_data));
+        
+    }
+
+    if ((closedir(dir)) == -1)
+        std::cerr << "Failed to close " << directory << "\n";
 }

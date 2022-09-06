@@ -32,6 +32,7 @@ class Asset
     public:
         // Constructor
         Asset(AssetType type, const std::string &asset_name);
+        Asset(AssetType type, const std::string &asset_name, const std::string data);
 
         // Member functions
         void establishSession();
