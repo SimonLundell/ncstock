@@ -14,7 +14,7 @@ void AssetManager::add_asset(AssetType type, const std::string& name)
 {
     for (const auto& asset : _assets)
     {
-        if (asset->getCurrency().find(name) != std::string::npos)
+        if (asset->getAssetName() == name)
         {
             return;
         }

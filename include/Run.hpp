@@ -34,7 +34,7 @@ struct Run
         auto win = window.get_win();
 
         // a_manager.populate_assets();
-        auto raw_info = a_manager.get_raw_info();
+        // auto raw_info = a_manager.get_raw_info();
         std::vector<size_t> text_positions = window.get_text_buffer_tracker();
 
         refresh_window(win, a_manager, text_positions);
