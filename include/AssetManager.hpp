@@ -19,7 +19,6 @@ class AssetManager
         std::vector<std::shared_ptr<Asset>> get_assets() const;
         std::vector<std::string> get_raw_info() const;
         std::vector<std::string> get_asset_rates() const;
-        void get_temp_data() const;
         void populate_assets(); // Not being called, only populated from cache.txt
         void add_asset(AssetType type, const std::string& name);
         void remove_asset(const int& row);
@@ -27,6 +26,7 @@ class AssetManager
         void save_rates();
         void save_cache();
         void read_cache(const std::string& directory);
+        void remove_cache(const int& row);
 
         const char* print_asset_info(const size_t& idx);
 
@@ -36,6 +36,7 @@ class AssetManager
         std::vector<std::shared_ptr<Asset>> _assets{};
         std::vector<std::string> _asset_rates{};
         std::vector<std::string> _raw_info{};
+        const std::string cache_path{"../temp/"};
 };
 
 #endif

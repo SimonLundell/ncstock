@@ -2,7 +2,7 @@
 
 AssetManager::AssetManager()
 {
-    read_cache("../temp/");
+    read_cache(cache_path);
 }
 
 void AssetManager::populate_assets()
@@ -54,13 +54,9 @@ std::vector<std::string> AssetManager::get_asset_rates() const
     return _asset_rates;
 }
 
-void AssetManager::get_temp_data() const
-{
-}
-
-
 void AssetManager::remove_asset(const int& row)
 {
+    remove_cache(row);
     _assets.erase(_assets.begin()+row-1);
 }
 
@@ -179,4 +175,16 @@ void AssetManager::read_cache(const std::string& directory)
 
     if ((closedir(dir)) == -1)
         std::cerr << "Failed to close " << directory << "\n";
+}
+
+void AssetManager::remove_cache(const int& row)
+{
+    std::string name = _assets[row-1]->getAssetName();
+    std::string t;
+
+    (_assets[row-1]->getType() == AssetType::CRYPTO) ? t = "crypto_" : t = "stock_";
+
+    int remove = std::remove((cache_path + t + name + ".json").c_str());
+    if (remove != 0)
+        std::cerr << "Failed to remove cache for " << name << " , check privilegies\n";
 }
