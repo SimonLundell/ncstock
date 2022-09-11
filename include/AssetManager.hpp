@@ -24,9 +24,12 @@ class AssetManager
         void remove_asset(const int& row);
         void update_assets();
         void save_rates();
-        void save_cache();
         void read_cache(const std::string& directory);
         void remove_cache(const int& row);
+        
+        AssetType string_to_AssetType(std::string type);
+        std::string AssetType_to_string(const AssetType& type);
+        void sort_assets();
 
         const char* print_asset_info(const size_t& idx);
 

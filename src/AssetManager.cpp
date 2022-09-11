@@ -19,12 +19,10 @@ void AssetManager::add_asset(AssetType type, const std::string& name)
             return;
         }
     }
+
     _assets.emplace_back(std::make_shared<Asset>(type, name));
-    std::sort(_assets.begin(), _assets.end(), 
-    [](std::shared_ptr<Asset> &ass1, std::shared_ptr<Asset> &ass2)
-    {
-        return ass1->getCurrency() < ass2->getCurrency();
-    });
+
+    sort_assets();
 }
 
 std::shared_ptr<Asset> AssetManager::get_asset(const std::string& name)
@@ -90,42 +88,6 @@ void AssetManager::save_rates()
     }
 }
 
-void AssetManager::save_cache()
-{
-    std::string asset_name;
-    std::string rate;
-    std::string type;
-
-    AssetType asset_type;
-
-    std::ofstream data;
-    std::string line;
-
-    data.open("../temp/cache.txt");
-    if (!data.is_open())
-    {
-        std::cerr << "Failed to open cache.txt, check your privilegies\n";
-        exit(0);
-    }
-    data.clear();
-
-    for (const auto& asset : _assets)
-    {
-        asset_name = asset->getCurrency();
-        rate = asset->getCloseRate();
-        asset_type = asset->getType();
-
-        (asset_type == AssetType::CRYPTO) ? type = "CRYPTO" : type = "STOCK";
-        
-        std::string comb = type + " " + asset_name + " " + rate + "\n";
-
-        if (data.is_open())
-        {
-            data << comb;
-        }
-    }
-}
-
 void AssetManager::read_cache(const std::string& directory)
 {
     DIR* dir;
@@ -153,11 +115,11 @@ void AssetManager::read_cache(const std::string& directory)
         {
             continue;
         }
-        AssetType type;
 
         size_t delimiter = filename.find("_");
         size_t stop_delimiter = filename.find(".");
-        (filename.substr(0, delimiter)) == "crypto" ? type = AssetType::CRYPTO : type = AssetType::STOCK;
+
+        AssetType type = string_to_AssetType(filename.substr(0, delimiter));
         std::string name = filename.substr(delimiter+1,(stop_delimiter-delimiter)-1);
 
         std::stringstream buffer;
@@ -180,11 +142,28 @@ void AssetManager::read_cache(const std::string& directory)
 void AssetManager::remove_cache(const int& row)
 {
     std::string name = _assets[row-1]->getAssetName();
-    std::string t;
-
-    (_assets[row-1]->getType() == AssetType::CRYPTO) ? t = "crypto_" : t = "stock_";
+    std::string t = AssetType_to_string(_assets[row-1]->getType()) + "_";
 
     int remove = std::remove((cache_path + t + name + ".json").c_str());
     if (remove != 0)
         std::cerr << "Failed to remove cache for " << name << " , check privilegies\n";
+}
+
+AssetType AssetManager::string_to_AssetType(std::string type)
+{
+    for (auto & c : type) c = std::tolower(c);
+    return (type == "crypto") ? AssetType::CRYPTO : AssetType::STOCK;
+}
+std::string AssetManager::AssetType_to_string(const AssetType& type)
+{
+    return (type == AssetType::CRYPTO) ? "crypto" : "stock";
+}
+
+void AssetManager::sort_assets()
+{
+    std::sort(_assets.begin(), _assets.end(), 
+    [](std::shared_ptr<Asset> &ass1, std::shared_ptr<Asset> &ass2)
+    {
+        return ass1->getAssetName() < ass2->getAssetName();
+    });
 }

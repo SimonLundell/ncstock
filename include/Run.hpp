@@ -18,6 +18,7 @@ struct Run
 {
     static void run()
     {
+        AssetType type; // Outside since cases share variable initialization
         std::string asset_type;
         std::string new_asset;
         int ch; // To store keystrokes
@@ -117,8 +118,7 @@ struct Run
                         asset_type = Input::getString(window);
                         new_asset = Input::getString(window);
                         
-                        AssetType type;
-                        (asset_type == "crypto") ? type = CRYPTO : type = STOCK;
+                        type = a_manager.string_to_AssetType(asset_type);
                         a_manager.add_asset(type, new_asset);
 
                         break;
@@ -139,22 +139,39 @@ struct Run
 
                                 int n = getch();
                                 mvwaddch(stdscr, c_y, c_x, n);
+                                msg.push_back(n);
                                 c_x++;
 
                                 // Fill msg with new search-string                                
                                 wmove(stdscr, c_y, c_x);
                                 while (n != KEY::enter)
                                 {
-                                    msg.push_back(n); /* Push back character from getch() to msg while it is not newline */ 
                                     n = getch();
-                                    mvwaddch(stdscr, c_y, c_x, n);
-                                    c_x++;
-                                    wmove(stdscr, c_y, c_x);
+
+                                    if (n == KEY::backspace)
+                                    {
+                                        msg.erase(msg.length()-1,1);
+                                        mvwdelch(stdscr, c_y, c_x-1);
+                                        c_x--;
+                                        wmove(stdscr, c_y, c_x);
+                                    }
+                                    else if (n >= KEY::A && n <= KEY::z)
+                                    {
+                                        msg.push_back(n); /* Push back character from getch() to msg while it is not newline */ 
+                                        mvwaddch(stdscr, c_y, c_x, n);
+                                        c_x++;
+                                        wmove(stdscr, c_y, c_x);
+                                    }
+                                    else
+                                    {
+                                        continue;
+                                    }
+
                                     wrefresh(stdscr);
                                 }
                                 // Make API call with chosen type and msg
-                                AssetType type;
-                                (asset_type == "Crypto") ? type = CRYPTO : type = STOCK;
+                                type = a_manager.string_to_AssetType(asset_type);
+                                for (auto & c : msg) c = std::toupper(c);
                                 a_manager.add_asset(type, msg);
 
                                 // Clear highlight and msg text
@@ -171,7 +188,7 @@ struct Run
                         break;
 
                     case KEY::c : // c
-                        a_manager.save_cache();
+                        // a_manager.save_cache(); Deprecated
                         refresh_window_and_update(win, a_manager);
                         r_HorizontalPosition(win, window.c_y, window.c_x, COLS-3, DEFAULT, CURRENT_ROW);
                         break;
@@ -185,7 +202,7 @@ struct Run
             }
             else if (now > timer)
             {
-                a_manager.save_cache();
+                // a_manager.save_cache(); Deprecated
                 refresh_window(win, a_manager, text_positions);
                 r_HorizontalPosition(win, window.c_y, window.c_x, COLS-3, DEFAULT, CURRENT_ROW);
 

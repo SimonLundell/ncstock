@@ -1,5 +1,7 @@
 enum KEY
 {
+    A = 0x41,
+
     a = 0x61,
     b = 0x62,
     c = 0x63,
@@ -28,5 +30,6 @@ enum KEY
 
     // Util keys
     del = 0x14A,
-    enter = 0xA
+    enter = 0xA,
+    backspace = 0x107
 };
