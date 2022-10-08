@@ -177,6 +177,7 @@ struct Run
                                 // Clear highlight and msg text
                                 for (unsigned int j = 0; j < msg.size()+3; j++)
                                     mvwdelch(stdscr, c_y, c_x-j);
+
                                 wattroff(stdscr, A_REVERSE);
                                 mvwprintw(stdscr, highlight, window.get_infotxt_size()+3, window.get_asset_options(highlight).c_str());
                                 wrefresh(stdscr);
@@ -189,8 +190,9 @@ struct Run
 
                     case KEY::c : // c
                         // a_manager.save_cache(); Deprecated
-                        refresh_window_and_update(win, a_manager);
-                        r_HorizontalPosition(win, window.c_y, window.c_x, COLS-3, DEFAULT, CURRENT_ROW);
+                        // refresh_window_and_update(win, a_manager);
+                        // r_HorizontalPosition(win, window.c_y, window.c_x, COLS-3, DEFAULT, CURRENT_ROW);
+                        a_manager.update_assets();
                         break;
 
                     //case 10: // KEY_ENTER refers to numpad enter. ASCII 10 is "normal" enter

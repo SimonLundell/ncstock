@@ -28,6 +28,7 @@ Asset::Asset(AssetType type, const std::string &asset_name,  const std::string d
     _volume("")
 {
     parseResponse(data);
+    // establishSession();
 }
 
 void Asset::establishSession()
@@ -76,10 +77,15 @@ void Asset::callAPI()
     _session->sendRequest(_asset_info);
     
     std::istream &is = _session->receiveResponse(res);
-    if (res.getStatus() == 400)
+    auto status = res.getStatus();
+    if (status == 400)
     {
         std::cerr << "Connection couldn't be resolved, exiting\n";
         exit(1);
+    }
+    else if (status != 200)
+    {
+        std::cerr << "Weird status response: " << status << "\n";
     }
     Poco::StreamCopier::copyToString(is, output);
     std::istringstream ss(output);
@@ -134,7 +140,7 @@ void Asset::cache_dump(const std::string& response_string)
 
     (getType() == AssetType::CRYPTO) ? type = "crypto" : type = "stock";
 
-    data.open("../temp/" + type + "_" + name + ".json");
+    data.open("../cache/" + type + "_" + name + ".json");
     if (!data.is_open())
     {
         std::cerr << "Failed to open response_dump.json, check your privilegies\n";

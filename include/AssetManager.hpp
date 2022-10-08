@@ -39,7 +39,7 @@ class AssetManager
         std::vector<std::shared_ptr<Asset>> _assets{};
         std::vector<std::string> _asset_rates{};
         std::vector<std::string> _raw_info{};
-        const std::string cache_path{"../temp/"};
+        const std::string cache_path{"../cache/"};
 };
 
 #endif

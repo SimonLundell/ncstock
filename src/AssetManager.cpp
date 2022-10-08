@@ -73,8 +73,7 @@ const char* AssetManager::print_asset_info(const size_t& idx)
 // Should update the rate of all assets in the list
 void AssetManager::update_assets()
 {
-    this->save_rates();
-    for (const auto& asset : _assets)
+    for (auto& asset : _assets)
     {
         asset->queryExchangeRate();
     }
@@ -152,7 +151,7 @@ void AssetManager::remove_cache(const int& row)
 AssetType AssetManager::string_to_AssetType(std::string type)
 {
     for (auto & c : type) c = std::tolower(c);
-    return (type == "crypto") ? AssetType::CRYPTO : AssetType::STOCK;
+    return (type.find("crypto") != std::string::npos) ? AssetType::CRYPTO : AssetType::STOCK;
 }
 std::string AssetManager::AssetType_to_string(const AssetType& type)
 {
