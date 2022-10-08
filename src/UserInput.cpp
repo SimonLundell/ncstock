@@ -29,7 +29,7 @@ namespace Input
         wrefresh(window.get_win());
         while (n != '\n')
         {
-            msg.push_back(n); /* Push back character from getch() to msg while it is not newline */ 
+            msg.push_back(n); /* Push back character from getch() to msg while it is not newline! */ 
             n = getch();
             mvwaddch(window.get_win(), c_y, c_x, n);
             c_x++;
